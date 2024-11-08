@@ -13,7 +13,7 @@ const nextConfig = {
 
   output: "standalone",
   compiler: {
-    removeConsole: false,
+    removeConsole: true,
   },
 };
 
