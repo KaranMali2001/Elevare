@@ -33,9 +33,9 @@ jobs:
 
             echo "Cloning new repo"
             git clone https://github.com/KaranMali2001/Elevare.git
-            mv .env.production Elevare/nextapp/
-            mv .env.production Elevare/bg_tasks/
-            mv .env Elevare/LLM
+            mv SensitiveEnv/env.production ~/Elevare/nextapp/
+            mv SensitiveEnv/env.production ~/Elevare/bg_tasks/
+            mv SensitiveEnv/.env ~/Elevare/LLM
 
             cd Elevare
             echo "Deploying to production"
