@@ -35,7 +35,7 @@ services:
     image: bg_tasks
     container_name: prod_bgTasks
     env_file:
-      - ./bg_tasks/.env.production
+      - ./bg_tasks/env.production
     networks:
       - elevare
 networks:
