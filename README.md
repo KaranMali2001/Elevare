@@ -20,8 +20,8 @@ Ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository_url>
-cd nextapp
+git clone https://github.com/KaranMali2001/Elevare
+cd Elevare/nextapp
 ```
 
 ### 2. Install Dependencies
