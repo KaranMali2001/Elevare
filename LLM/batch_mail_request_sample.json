@@ -1,0 +1,36 @@
+{
+  "username": "chinmaypisal45@gmail.com",
+  "emails": [
+    {
+      "mail_id": "1",
+      "subject": "Project Update",
+      "sender": "alice@example.com",
+      "body": "Hey team, just wanted to update you on the project progress. We're ahead of schedule and should complete phase 1 by next week. The development team has been working hard, and we've managed to tackle most of the challenging aspects earlier than anticipated. We're also seeing some excellent results from the testing phase, which has been very encouraging. As we move forward, I would like to suggest we keep up this pace and ensure that we maintain clear communication across all departments. Marketing has already started preparing their campaigns, and they’re eager to get the ball rolling as soon as phase 1 is done. I will keep you posted on any changes, but for now, things are looking very positive. Let's aim to wrap up by the middle of next week, after which we can start focusing on phase 2, which will involve more client interactions and feedback loops. Great work everyone!"
+    },
+    {
+      "mail_id": "2",
+      "subject": "Meeting Reminder",
+      "sender": "bob@example.com",
+      "body": "Don't forget our meeting scheduled for tomorrow at 10 AM. We'll be discussing the new marketing strategy, which includes targeting new demographics, utilizing more aggressive SEO tactics, and launching a series of viral campaigns on social media platforms. It’s crucial that we align our goals and ensure that the marketing team understands the technical challenges that may arise. We’ll also review the proposed budget allocations for these initiatives, so come prepared with any questions or concerns regarding resource distribution. Additionally, we’ll take some time to go over the preliminary designs for the website refresh. Looking forward to seeing everyone there and hearing your valuable insights."
+    },
+    {
+      "mail_id": "3",
+      "subject": "Invoice Due",
+      "sender": "charlie@example.com",
+      "body": "Dear Customer, your invoice #45678 is due by the end of the month. Please make sure to complete the payment on time to avoid any late fees. This invoice covers the services rendered during the last quarter, including consultations, development work, and post-deployment support. As per our terms, payments made after the due date will incur a 2% late fee per week, so we highly encourage you to settle this as soon as possible. If you have any questions or concerns about the invoice or require clarification on the charges, do not hesitate to reach out to our billing department. We value your business and look forward to continuing our successful partnership. Thank you for your prompt attention to this matter."
+    },
+    {
+      "mail_id": "4",
+      "subject": "Vacation Request",
+      "sender": "david@example.com",
+      "body": "Hi HR, I would like to request a vacation from October 1st to October 10th. Please let me know if this can be accommodated. During this time, I will ensure that all my pending tasks are handed over to my backup, and I will provide clear instructions to the team to ensure a smooth transition in my absence. I have been working consistently over the past few months and feel that this time off would help me recharge and come back even more productive. Should any urgent issues arise, I will be reachable by phone, but I would appreciate it if non-essential matters could be handled by the team. Let me know if you need any further details or formal documentation to approve this request."
+    },
+    {
+      "mail_id": "5",
+      "subject": "System Maintenance Notification",
+      "sender": "eve@example.com",
+      "body": "Please be aware that the system will be undergoing maintenance on Saturday from 2 AM to 4 AM. During this time, access will be limited, and certain functionalities may be unavailable. This maintenance is necessary to ensure that our infrastructure remains secure and up-to-date with the latest security patches and performance improvements. We anticipate minimal downtime, but we advise all users to save their work frequently and avoid scheduling any critical tasks during the maintenance window. We will notify you once the maintenance is complete, and all systems are back online. Thank you for your cooperation and understanding. If you have any concerns or need further information about the planned maintenance, feel free to contact the IT department."
+    }
+  ],
+  "categories": ["Work", "Updates"]
+}

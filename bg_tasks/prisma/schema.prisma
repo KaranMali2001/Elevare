@@ -1,0 +1,102 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id                   String       @id @map("_id")
+  emailAddress         String       @unique
+  emails               Emails[]
+  profileUrl           String
+  userName             String
+  refreshToken         String
+  lastFetchdTimeStamp  String?
+  emailsCnt            Int?
+  underProcessEmailIds String[]
+  categories           String[]
+  files                UserFiles[]
+  analytics            Analytics[]
+  ReplyMails           ReplyMails[]
+  joinedDate           DateTime     @default(now())
+}
+
+model Emails {
+  id               String   @id @map("_id")
+  threadId         String?
+  contentType      String?
+  shortSummary     String?
+  longSummary      String?
+  sentiment        String?
+  tone             String?
+  cc               String?
+  bcc              String?
+  date             String?
+  from             String?
+  subject          String?
+  label            String[]
+  category         String?
+  userEmailAddress String
+
+  replies ReplyMails[]
+  user    Users        @relation(fields: [userEmailAddress], references: [emailAddress])
+
+  @@unique([userEmailAddress, id])
+}
+
+model Threads {
+  id                 String @id @map("_id")
+  threadSummery      String
+  threadMailCount    Int
+  latestThreadMailId String
+}
+
+model ReplyMails {
+  id                 String   @id @default(uuid()) @map("_id") //this is id of newly generated mail
+  replyMailId        String?
+  threadId           String?
+  idOfOriginalMail   String
+  generatedSubject   String?
+  generatedResponse  String
+  generatedTimeStamp String?
+  userEmailAddress   String
+  to                 String? //sender in our ReplyEmailFormat type
+  cc                 String?
+  bcc                String?
+  user               Users    @relation(fields: [userEmailAddress], references: [emailAddress])
+  labels             String[]
+  category           String?
+  emails             Emails   @relation(fields: [idOfOriginalMail], references: [id])
+  userFilesId        String?
+}
+
+model UserFiles {
+  id           String   @id @default(uuid()) @map("_id")
+  fileName     String
+  fileType     String
+  filePath     String
+  uploadedAt   DateTime @default(now())
+  emailAddress String
+  user         Users    @relation(fields: [emailAddress], references: [emailAddress])
+
+  // user             Users        @relation(fields: [userEmailAddress], references: [emailAddress])
+}
+
+//add new label model and add to analytics
+model Analytics {
+  id                         String @id @default(uuid()) @map("_id")
+  userEmailAddress           String @unique
+  totalSummerized            Int
+  totalGenerated             Int?
+  totalSent                  Int?
+  dailySummeryCount          Int?
+  dailyGeneratedCount        Int?
+  dailySentCount             Int?
+  // totalThreadsSummerized Int?
+  totalThreadsGeneratedReply Int?
+  user                       Users  @relation(fields: [userEmailAddress], references: [emailAddress])
+}

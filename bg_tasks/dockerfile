@@ -1,0 +1,25 @@
+# Stage 1: Install dependencies
+FROM node:20-alpine AS deps
+
+WORKDIR /app
+RUN apk add --no-cache libc6-compat
+# Install dependencies only
+COPY package*.json ./
+COPY ./prisma ./prisma
+
+RUN npm install --only=production
+RUN npx prisma generate
+
+# Stage 2: Final image
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy only the production node_modules from the previous stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy the application code
+COPY . .
+
+# Run the Node.js background process
+CMD ["node", "index.js"]

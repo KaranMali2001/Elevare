@@ -1,0 +1,43 @@
+services:
+  elevare-docker-compose:
+    build:
+      context: ./nextapp
+      dockerfile: ./DockerFile
+    image: elevare-docker-compose
+    ports:
+      - "3000:3000"
+    networks:
+      - elevare
+    container_name: prod_nextapp
+  fastapi:
+    build: ./LLM
+    container_name: prod_fastapi_dev
+
+    depends_on:
+      - qdrant
+    environment:
+      - QDRANT_HOST=http://qdrant:6333
+      - QDRANT_PORT=6333
+    networks:
+      - elevare
+    command: ["fastapi", "run", "main.py"]
+
+  qdrant:
+    image: qdrant/qdrant:v1.3.0
+    container_name: prod_qdrant
+
+    networks:
+      - elevare
+  bg_tasks:
+    build:
+      context: ./bg_tasks
+      dockerfile: ./dockerfile
+    image: bg_tasks
+    container_name: prod_bgTasks
+    env_file:
+      - ./bg_tasks/.env.production
+    networks:
+      - elevare
+networks:
+  elevare:
+    driver: bridge

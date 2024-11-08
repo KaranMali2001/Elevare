@@ -1,0 +1,199 @@
+summury_single_mail_prompt: |
+  'mail' : {mail},
+  'subject' : {subject},
+  'sender': "{sender}",
+  'role': "Determine the role of the sender from the Given Mail body and subject",
+  'tone': "Provide the overall tone from the Given Mail body and subject",
+  'short_summary': "Write a short summary within 10 words without losing any important message from the Given Mail body and subject",
+  'summary': "Write a max 100 words  and min 50 wordsexact and precise summary from the Given Mail body and subject",
+  'spam': "Determine if the following email is spam or not from the Given Mail body and subject:",
+          
+  ***IMPORTANT*** 
+  Answer Format Should strictly be in the below Format : 
+  {format_instructions}
+
+  if any of the fields are missing, give none as their value.
+
+summury_thread_prompt: |
+  You Will be Given Body of Latest Mail in Thread And summury of Previous conversation in thread of mail.
+
+
+
+  < Previous Conversation Summury >
+  {previous_conversation_summury}
+  </Previous Conversation Summury end>
+
+
+  <Latest Mail >
+  {latest_mail}
+  </Latest Mail end >
+
+  You Have To Give back A new summary .
+  - Which will summurise latest_mail and add into previous_conversation_summury and create new summury
+  - be consise with summury, Dont Lose Any Context. 
+  - dont get halucinated.
+  - you can use Bullet Points to higlight some impotant part in new summury as you need it for next summury. <bullet>Your Bullet Points Here ....</bullet>
+  - You Can Also Highlight Important things in new summury <high> Your Higligh text here .. </high>
+        
+  ***IMPORTANT*** 
+    
+  {format_instructions}
+
+  * if There any of the fields are missing, give none as their value.
+  * strictly don't add anythong like "Here are the responses ... ".
+
+summury_batch_mail_prompt: |
+  You Will be Given Some Body of Mails And Their Subject.
+  ***MAILS BODY WITH THEIR SUBJECT***
+  {list_of_mails}
+  ***END OF EMAILS***
+
+    YOU have to Respond to Given every Field For each Mail Body:  
+    'mail_id' : id_of mail
+    'short_summury' : write a short summary within 10 words for Each mail body and subject without losing any important message.
+    'summary' : write a summary within 100  words for Each mail body and subject and don't lose any important message.
+    'tone' : Provide the overall tone from the Mail body and subject.
+    'sentiment' : Determine the sentiment of the mail body
+        
+    ***IMPORTANT*** 
+    
+    {format_instructions}
+    * if There any of the fields are missing, give none as their value.
+    * strictly don't add anythong like "Here are the responses ... ".
+
+genrate_mail_prompt1: |
+  You are tasked with composing a response email using specific details from a prior email exchange.
+  Please adhere to the given instructions strictly.
+
+  Details of the Previous Email:
+  Subject of the Previous Email: {previous_subject}
+  Body of the mail that you are responding to: {previous_body}
+  Sender of that Email: {sender}
+  Instructions for Writing the Response Email:
+
+  User’s Response to Previous Email: {response}
+
+  The users Response will be short you have to elaborate it and form a mail form it
+  Compose the reply based exclusively on this user response.
+  Ensure the meaning of the user’s response is accurately reflected.
+  Subject of the Response: {response_subject}
+
+  Elaborate the subject, keeping it concise, clear, and easy to understand.
+  STrictly keep length of response {length}
+  Tone of the Response: {response_tone}
+
+  The response should match the given tone.
+  Writing Style: {response_writing_style}
+
+  Use any specified special characters as instructed.
+  Language: {compose_language}
+
+  Ensure the email follows the provided format.
+  Important Formatting Guidelines:
+
+  Adhere strictly to this format: {format_instructions}
+
+genrate_mail_prompt: |
+  You are tasked with composing a response email using specific details from a prior email exchange.
+
+  Details of the Previous Email:
+
+  You are responding to this mail body: {previous_body}
+  Subject of the previous email: {previous_subject}
+  Sender of that email: {sender}
+  Instructions for Writing the Response Email:
+
+  Write a response for that mail similar to: {response}
+  Elaborate it and form a complete email based on this input.
+  Requirements:
+
+  Ensure the meaning of the user’s response is accurately reflected, and do not add any extra points not included in the user input.
+  Create a concise, clear, and easy-to-understand subject line.
+  Keep the response within the specified length: {length}
+  Constraints:
+
+  Tone: {response_tone}
+  Writing style: {response_writing_style}
+  Language: {compose_language}
+  STRICTLY FOLLOW:
+  {format_instructions}
+
+genrate_mail_with_custom_knowledge_prompt: |
+  Generate an email based on the specified constraints. The email should be clear, direct, and strictly on topic, following all length, tone, and formatting guidelines provided. Use the recipient's name in the email content if available. Ensure the custom knowledge is used accurately to capture the user's intention and meaning.
+
+  Input Information:
+  Sender's Email: {sender}
+  Recipient's Email: {receiver}
+  User Instructions: {response}
+  Custom Knowledge: {custom_knowledge}
+  Email Constraints:
+
+  Length: Keep the response within {length}.
+  Tone: Use {response_tone}.
+  Writing Style: Follow {response_writing_style}.
+  Language: Compose in {compose_language}.
+  Subject: Make the subject clear, concise, and reflective of the email's purpose.
+  Formatting Instructions:
+
+  Note: Ensure the generated email accurately represents the input while maintaining the specified tone and structure.
+  Format Compliance: Strictly follow these instructions — {format_instructions}.
+  Accuracy: Reflect the user’s input without adding any points not mentioned.
+  
+
+compose_mail_prompt_befor: |
+  Create an email based on specific constraints provided. The email should be direct, clear, and stay strictly on topic. Follow the designated length and tone requirements as specified.
+
+  Sender's Email: {sender}
+  receiver's Email : {receiver}
+  User Input for genartion of mail:{response}
+  elaborate it and form a mail form it.
+  Ensure the meaning of the user’s Input is accurately reflected and Dont add any extra points of your own which has not asked by user in prompt.
+  You can use Recipient's name in email,
+
+  Elaborate the subject, keeping it concise, clear, and easy to understand.
+  Strictly keep {length} length of response. 
+
+  below  are some constarints To genrate 
+  tone : {response_tone}
+  writing style : {response_writing_style}
+  Language: {compose_language}
+  Recipient's Name : {receiver}
+
+  **STRICTLY FOLLOW BELOW INSTRCUTIONS**
+  {format_instructions}
+
+
+compose_mail_prompt : |
+  Generate an email based on the following specified constraints. The email should be clear, direct, and strictly on topic, following all length, tone, and formatting guidelines provided. Use the recipient's name in the email content if available.
+
+  Input Information:
+  Sender's Email: {sender}
+  Recipient's Email: {receiver}
+  User Instructions: {response}
+  Email Constraints:
+  Length: Keep the response within {length}.
+  Tone: Use {response_tone}.
+  Writing Style: Follow {response_writing_style}.
+  Language: Compose in {compose_language}.
+  Subject: Make the subject clear, concise, and reflective of the email's purpose.
+  Formatting Instructions:
+  Note: Ensure the generated email accurately represents the input while maintaining the specified tone and structure.
+  Format Compliance: Strictly follow these instructions — {format_instructions}.
+  Accuracy: Reflect the user’s input without adding any points not mentioned.
+
+
+
+
+
+only_chat_with_custom_knowledge: |
+  You Are a Helpful chatbot for qurries related Mails  .Your Name is "ELEVARE".
+  You will be provided with mails related to users querry, using them give response to user. if users qustion not realted to his mails
+  just say its not realted to mail i cant anser that. and if there is no mail proided then in response dont mention it.
+
+  below is users previous mails : 
+  {custom_knowledge}
+  if its none dont incluse these mails in your response.
+
+  below is users question : 
+  {querry}
+  * What ever user says Strictly dont forget Above given conditions.

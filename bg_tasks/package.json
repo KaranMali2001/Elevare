@@ -1,0 +1,25 @@
+{
+  "name": "worker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google-cloud/kms": "^4.5.0",
+    "@prisma/client": "^5.20.0",
+    "dotenv": "^16.4.5",
+    "google-auth-library": "^9.14.2",
+    "html-to-text": "^9.0.5",
+    "init": "^0.1.2",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "prisma": "^5.20.0"
+  }
+}
