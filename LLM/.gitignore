@@ -1,0 +1,7 @@
+env
+logs/vector_db.log
+*.log
+/__pycache__
+*.pyc
+
+https://firebasestorage.googleapis.com/v0/b/quicksend-f6763.appspot.com/o/CustomKnowledgeFiles%2Fkaransignup5599%40gmail.com%2FAttention%20is%20All%20you%20Need.pdf?alt=media&token=2de9a0ff-2247-4cbf-a600-9bad85a3d31f

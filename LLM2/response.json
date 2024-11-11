@@ -1,0 +1,14 @@
+{
+    [
+        {'mail_id': 'x12f8a9d01b3947d', 'short_summary': 'System failure during last transaction', 'summary': "A system failure occurred during the user's last transaction, but if no action was taken, it can be disregarded. Additionally, a promotion for 20% off on all items is mentioned.", 'tone': 'Apologetic', 'category': 'Support'
+        },
+        {'mail_id': 'f67a9c4e8fa34db1', 'short_summary': 'Package shipment and loyalty offer', 'summary': "The user's subscription has been renewed and their package is on the way. A tracking link is provided, and a limited-time offer on the loyalty program is announced.", 'tone': 'Informative', 'category': 'Shipping'
+        },
+        {'mail_id': 'b23e7dbf8a11de99', 'short_summary': 'Meeting rescheduled due to travel issues', 'summary': "The meeting scheduled for the next day has been postponed due to travel issues. The user's invoice is still pending approval, and they are asked to confirm when available.", 'tone': 'Informative', 'category': 'None'
+        },
+        {'mail_id': 'r12cf08a7b4312ac', 'short_summary': 'Unusual login attempts detected', 'summary': 'The user is notified of unusual login attempts from a new device and asked to verify if it was them. A link to a tech blog for productivity tips is also provided.', 'tone': 'Alert', 'category': 'Security'
+        },
+        {'mail_id': 'e23a6d7f02cf1243', 'short_summary': 'Holiday offers and account verification', 'summary': 'The user is offered exclusive holiday deals, but is also required to verify their account due to recent policy changes to avoid service disruptions.', 'tone': 'Urgent', 'category': 'Promotions'
+        }
+    ]
+}

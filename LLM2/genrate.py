@@ -90,11 +90,7 @@ def extract_data_from_mail_request(response):
             extracted_info['compose_language'] = response.compose_language
         
         if hasattr(response, 'length'):
-            if response.length == "Short" : length = "20 to 30 words"
-            elif response.length == "Medium" : length = "40 to 60 words"
-            elif response.length == "Long" : length = "80 to 100 words"
-            elif response.length == "Best Fit" : length = "Choose Best you want which best suites."
-            extracted_info['length'] =   length      
+            extracted_info['length'] = response.length        
         print(extracted_info.keys())
         return extracted_info
 

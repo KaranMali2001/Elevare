@@ -8,11 +8,11 @@ from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from vector_db_ops import Vector_DB
 from langchain.schema.runnable import RunnablePassthrough
-
-
+from langchain.memory import ConversationSummaryMemory
+from langchain_community.chat_message_histories import ChatMessageHistory
 from vector_db_ops import Vector_DB
 load_dotenv()
-
+chat_history = ChatMessageHistory()
 
 def load_prompts(yaml_file):
     try:
@@ -21,9 +21,6 @@ def load_prompts(yaml_file):
     except Exception as e:
         print(e)
         return None
-
-
-prompts = load_prompts('prompts.yaml')
 
 
 def get_llm():
@@ -39,13 +36,27 @@ def get_llm():
     return llm
 
 
-def get_custom_knowledge(retriver,user_name, querry):
-    collection_name = user_name
-    collection = Vector_DB(collection_name=user_name, force_create=False)
-    if collection.collection_exists:
-        data = collection.similarity_search(querry, k=2)
-        return data 
-    else:
+
+
+
+
+
+
+prompts = load_prompts('prompts.yaml')
+
+
+
+def get_custom_knowledge(retriver, user_name, querry):
+    try:
+        collection_name = user_name
+        collection = Vector_DB(collection_name=user_name, force_create=False)
+        if collection.collection_exists:
+            data = collection.similarity_search(querry, k=2)
+            return data
+        else:
+            return None
+    except Exception as e:
+        print(e)
         return None
 
 
@@ -56,12 +67,13 @@ def chat_bot():
         if template and llm:
             prompt = PromptTemplate(
                 template=template,
-                input_variables=["custom_knowledge", "querry"],
+                input_variables=["custom_knowledge", "querry" , "history"],
                 # partial_variables={
                 #     "querry": parser.get_format_instructions(),
                 #     "category_list" : categories
                 #     },
             )
+
             chain = prompt | llm
             return chain
         else:
@@ -71,10 +83,41 @@ def chat_bot():
         return None
 
 
+
+def summarize_messages(chain_input):
+    try:
+        stored_messages = chat_history.messages
+        if len(stored_messages) == 0:
+            return False
+        summarization_prompt = ChatPromptTemplate.from_messages(
+            [
+                MessagesPlaceholder(variable_name="chat_history"),
+                (
+                    "user",
+                    "Distill the above chat messages into a single summary message. Include as many specific details as you can.",
+                ),
+            ]
+        )
+        summarization_chain = summarization_prompt | chat
+        summary_message = summarization_chain.invoke({"chat_history": stored_messages})
+        chat_history.clear()
+        chat_history.add_message(summary_message)
+        return True
+    except Exception as e:
+        print(f"Error summarizing messages: {e} ")
+        return False
+
+
+
+
 def chat_bot_get(chain,  custom_knowledge,  querry):
     try:
+        chat_history.add_user_message(querry)
         x = chain.invoke(
-            {"custom_knowledge": custom_knowledge, "querry": querry})
-        return True, x
+            {"custom_knowledge": custom_knowledge, "querry": querry , "history": chat_history.messages})
+        ai_response = [{"role": "assistant", "content": x.content}]
+        chat_history.add_ai_message(x.content)
+        summarize_messages(chat_history)
+        return True, x 
     except Exception as e:
         return False, str(e)
