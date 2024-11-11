@@ -1,3 +1,4 @@
+import { error } from "console";
 import prisma from "./db";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
@@ -68,6 +69,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
   },
-
+  pages: {
+    error: "/error",
+  },
   trustHost: true,
 });
