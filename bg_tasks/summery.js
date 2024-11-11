@@ -1,4 +1,4 @@
-async function summerizeInRealTime(emails, emailAddress) {
+export async function summerizeInRealTime(emails, emailAddress) {
   let data;
   let URL;
   // console.log('emails to llm',emails)
@@ -26,7 +26,7 @@ async function summerizeInRealTime(emails, emailAddress) {
     if (!res.ok) {
       console.log("LLM", await res.json());
       throw new Error(
-        "error from LLM to generate response:" + (await res.json()),
+        "error from LLM to generate response:" + (await res.json())
       );
     }
     const summaryMails = await res.json();
@@ -38,6 +38,3 @@ async function summerizeInRealTime(emails, emailAddress) {
     throw new Error("error form summery.ts" + e);
   }
 }
-module.exports = {
-  summerizeInRealTime,
-};

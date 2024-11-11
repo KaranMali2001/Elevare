@@ -2,7 +2,6 @@ import { GetAllEmails } from "@/actions/getAllEmails";
 import { getEmailsWithPaginationFromDB } from "@/actions/getEmailsWithPaginationFromDB";
 import { EmailClientComponent } from "@/components/email-client";
 
-import { auth } from "@/lib/auth";
 import { getDBMailCnt } from "@/lib/data-services";
 import { getDashBoardMailsFromQueueElement } from "@/utils/getDashBoardMailsFromQueueElement";
 import { getOneEmailForOneThread } from "@/utils/getOneEmailForOneThread";
@@ -16,11 +15,9 @@ export default async function Page() {
   const [, pathname] =
     fullUrl.match(new RegExp(`https?:\/\/${domain}(.*)`)) || [];
   console.log("pathname is", pathname);
-  const res = await GetAllEmails();
+  const userEmailAddress = "elevareapphelp@gmail.com";
+  const res = await GetAllEmails(userEmailAddress);
   const categories = new Set(["security", "newsletter", "education", "others"]); //IMP we will fetch this from db
-
-  const session = await auth();
-  const userEmailAddress = session?.user?.email;
 
   if (!res) return "Something went wrong";
 
@@ -33,19 +30,21 @@ export default async function Page() {
     queue: EmailFullFormat[][];
     skippedMails: SkippedMail[];
   } = await res.json();
-
+  console.log("res is ", res);
   let firstTimeFetched = true;
   let dbMailCnt: number = await getDBMailCnt(userEmailAddress || "");
+  console.log("db mail COun", dbMailCnt);
   let PageNumber;
   const threadIdSet = new Set<string>();
   if (data.length == 0) {
     if (queue.length == 0) {
       let emailFromDB: DashBoardEmail[] = await getEmailsWithPaginationFromDB(
         1,
-        userEmailAddress || ""
+        userEmailAddress
       );
-
+      console.log("emails from dB", emailFromDB);
       data = getOneEmailForOneThread(emailFromDB, threadIdSet);
+      console.log("data inside if ", data);
       PageNumber = 2;
       firstTimeFetched = false;
     } else {
@@ -76,7 +75,7 @@ export default async function Page() {
     data = getOneEmailForOneThread(data, threadIdSet);
     //imp because while creating queue we are inserting emails to database which increases the mail cnt but in pagination we are only want to take emails which are not fetched live
   }
-
+  console.log("data is ", data);
   return (
     <EmailClientComponent
       mails={data}

@@ -1,6 +1,6 @@
-const { Prisma, PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 
-async function resetLimits() {
+export async function resetLimits() {
   const prisma = new PrismaClient();
   const res = await prisma.analytics.updateMany({
     where: {},
@@ -11,6 +11,3 @@ async function resetLimits() {
     },
   });
 }
-module.exports = {
-  resetLimits,
-};

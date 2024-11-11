@@ -97,7 +97,7 @@ const FAQItem = ({
 
 export function MailboxLandingPageComponent() {
   const session = useSession();
-  console.log("session is", session.data);
+
   const dashOrLoginURL = session.data?.user?.email ? "/dashboard" : "/login";
   const [openFAQIndex, setOpenFAQIndex] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -197,10 +197,10 @@ export function MailboxLandingPageComponent() {
                   Get Started
                 </Link>
                 <Link
-                  href="#"
+                  href="/Demo"
                   className={`${isDarkMode ? "text-white border-gray-600" : "text-black border-gray-300"} border px-6 py-3 rounded-full text-sm font-medium flex items-center transition-transform duration-200 hover:scale-105`}
                 >
-                  Learn More <ChevronDown className="ml-2 h-4 w-4" />
+                  Demo <ChevronDown className="ml-2 h-4 w-4" />
                 </Link>
               </motion.div>
               <motion.div

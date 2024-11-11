@@ -34,6 +34,9 @@ import { uploadFile } from "@/actions/uploadFile";
 import { useSession } from "next-auth/react";
 import { listFolderContents } from "@/utils/listFolderContents";
 import { dateFormatter } from "@/utils/dateFormatter";
+import { PricingModalWindow } from "./pricing-modal";
+import { usePathname } from "next/navigation";
+import { DEFAULT_EMAIL } from "@/constants";
 
 type UploadedFile = {
   name: string;
@@ -41,8 +44,15 @@ type UploadedFile = {
 };
 
 export function EnhancedProfilePageComponent({ user }: any) {
+  const url = usePathname();
+
   const session = useSession();
-  const emailAddress = session.data?.user?.email;
+  let emailAddress: string;
+  if (url.startsWith("/Demo")) {
+    emailAddress = DEFAULT_EMAIL;
+  } else {
+    emailAddress = session.data?.user?.email || "";
+  }
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -50,7 +60,6 @@ export function EnhancedProfilePageComponent({ user }: any) {
   const [responseGeneratedMails, setResponseGeneratedMails] = useState(0);
   const [dataDeletionTime, setDataDeletionTime] = useState("3mon");
   useEffect(() => {
-    console.log("emailAddress", emailAddress);
     async function getFolderContent() {
       const res = await listFolderContents(emailAddress);
 
@@ -154,10 +163,8 @@ export function EnhancedProfilePageComponent({ user }: any) {
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-2xl">
-                {session.data?.user?.name}
-              </CardTitle>
-              <CardDescription>{session.data?.user?.email}</CardDescription>
+              <CardTitle className="text-2xl">{user.userName}</CardTitle>
+              <CardDescription>{emailAddress}</CardDescription>
               <p className="text-sm text-muted-foreground mt-1">
                 Member of Elevare Since:{dateFormatter(String(user.joinedDate))}
               </p>
@@ -182,19 +189,18 @@ export function EnhancedProfilePageComponent({ user }: any) {
           </div>
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Mail Statistics</h3>
-            <Link href={"/dashboard/profile/analytics"}>
+            <Link
+              href={
+                url.startsWith("/Demo")
+                  ? "/Demo/profile/analytics"
+                  : "/dashboard/profile/analytics"
+              }
+            >
               <AnimatedButton>
                 <BarChartIcon className="w-4 h-4 mr-2" />
                 Go to Analytics
               </AnimatedButton>
             </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <StatCard title="Summarized" value={summarizedMails.toString()} />
-            <StatCard
-              title="Response Generated"
-              value={responseGeneratedMails.toString()}
-            />
           </div>
 
           <Tabs defaultValue="data-management" className="w-full">
@@ -327,12 +333,9 @@ export function EnhancedProfilePageComponent({ user }: any) {
                     </div>
                   </div>
                   <div className="mt-6 flex justify-end space-x-2">
-                    <AnimatedButton variant="outline">
-                      View All Plans
-                    </AnimatedButton>
                     <AnimatedButton variant="default">
                       <StarIcon className="w-4 h-4 mr-2" />
-                      Upgrade Plan
+                      <PricingModalWindow />
                     </AnimatedButton>
                   </div>
                 </CardContent>

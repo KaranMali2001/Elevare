@@ -1,7 +1,4 @@
-const MAIL_COUNT = 15;
-const MAX_TOKENS = 5000;
+export const MAIL_COUNT = 15;
 
-module.exports = {
-  MAIL_COUNT,
-  MAX_TOKENS,
-};
+export const MAX_TOKENS = 5000;
+

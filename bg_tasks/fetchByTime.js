@@ -1,4 +1,4 @@
-async function FetchByTime(email, accessToken, timestamp) {
+export async function FetchByTime(email, accessToken, timestamp) {
   try {
     const response = await fetch(
       `https://gmail.googleapis.com/gmail/v1/users/me/messages?labelIds=INBOX&q=in:inbox&q=after:${timestamp}`,
@@ -7,7 +7,7 @@ async function FetchByTime(email, accessToken, timestamp) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      },
+      }
     );
     const data = await response.json();
     if (data.resultSizeEstimate === 0) {
@@ -25,6 +25,3 @@ async function FetchByTime(email, accessToken, timestamp) {
     throw new Error("Error fetching emails:" + error.message);
   }
 }
-module.exports = {
-  FetchByTime,
-};

@@ -36,6 +36,7 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 // Mock data (combine and extend the data from both files)
 
 export function EmailAnalyticsDashboard({
+  threadAnalysis,
   totalGeneratedEmails,
   totalSummerizedEmails,
   totalSentEmails,
@@ -50,7 +51,7 @@ export function EmailAnalyticsDashboard({
     totalSummarized: totalSummerizedEmails,
     totalGenerated: totalGeneratedEmails,
     totalSent: totalSentEmails,
-
+    threadAnalysis: threadAnalysis,
     emailCategoryData: categoryData,
     emailVolumeData: emailVolumeDataByDay,
     responseTimeData: [
@@ -63,12 +64,6 @@ export function EmailAnalyticsDashboard({
     topContactsData: topContactsData,
     emailActivityHeatmap: emailActivityHeatmap,
 
-    threadAnalysis: [
-      { name: "Single Email", value: 500 },
-      { name: "2-5 Emails", value: 300 },
-      { name: "6-10 Emails", value: 150 },
-      { name: "11+ Emails", value: 50 },
-    ],
     emailVolumeByHour: emailVolumeByHour,
 
     sentimentAnalysis: sentimentAnalysis,
@@ -144,7 +139,7 @@ export function EmailAnalyticsDashboard({
                           key={`cell-${index}`}
                           fill={COLORS[index % COLORS.length]}
                         />
-                      ),
+                      )
                     )}
                   </Pie>
                   <Tooltip />
@@ -306,7 +301,7 @@ export function EmailAnalyticsDashboard({
                       `${name} ${(percent * 100).toFixed(0)}%`
                     }
                   >
-                    {mockData.threadAnalysis.map((entry, index) => (
+                    {mockData.threadAnalysis.map((entry: any, index: any) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}

@@ -95,9 +95,10 @@ function GenerateCustomizationOptions({
               <SelectValue placeholder="Select length" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="short">Short</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="long">Long</SelectItem>
+              <SelectItem value="Short">Short</SelectItem>
+              <SelectItem value="Medium">Medium</SelectItem>
+              <SelectItem value="Long">Long</SelectItem>
+              <SelectItem value="Best Fit">Best Fit</SelectItem>
             </SelectContent>
           </Select>
         </div>

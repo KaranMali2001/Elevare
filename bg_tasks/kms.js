@@ -1,5 +1,5 @@
-const { GoogleAuth } = require("google-auth-library");
-const { KeyManagementServiceClient } = require("@google-cloud/kms");
+import { GoogleAuth } from "google-auth-library";
+import { KeyManagementServiceClient } from "@google-cloud/kms";
 
 const auth = new GoogleAuth({
   projectId: process.env.GOOGLE_PROJECT_ID, // Your Google Cloud Project ID
@@ -15,8 +15,6 @@ const auth = new GoogleAuth({
     universe_domain: "googleapis.com",
   },
 });
-const kmsClient = new KeyManagementServiceClient({ auth });
+export const kmsClient = new KeyManagementServiceClient({ auth });
 
-module.exports = {
-  kmsClient,
-};
+

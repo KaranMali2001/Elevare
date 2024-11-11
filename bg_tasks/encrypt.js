@@ -1,6 +1,5 @@
-const kmsClient = require("./kms");
-
-async function encrypt(data) {
+import { kmsClient } from "./kms.js";
+export async function encrypt(data) {
   const name = kmsClient.cryptoKeyPath(
     process.env.GOOGLE_PROJECT_ID,
     process.env.GOOGLE_LOCATION_ID,
@@ -14,6 +13,3 @@ async function encrypt(data) {
   //@ts-ignore
   return result.ciphertext?.toString("base64");
 }
-module.exports = {
-  encrypt,
-};

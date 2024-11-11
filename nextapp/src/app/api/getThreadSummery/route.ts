@@ -1,3 +1,4 @@
+import { DEFAULT_EMAIL } from "@/constants";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import decrypt from "@/utils/decrypt";
@@ -6,15 +7,21 @@ import encrypt from "@/utils/encrypt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { ids, threadId } = await request.json();
-
+  const { ids, threadId, url } = await request.json();
+  console.log("url is ", url);
+  let userEmailAddress: string;
   //first check in db that thread summery exist or not
-  const session = await auth();
+  if (url.startsWith("/Demo")) {
+    userEmailAddress = DEFAULT_EMAIL;
+  } else {
+    const session = await auth();
+    userEmailAddress = session?.user?.email || "";
+  }
   try {
     const latestEmailSummery = await prisma.emails.findFirst({
       where: {
-        id: ids.at(-1),
-        userEmailAddress: session?.user?.email || "",
+        emailId: ids.at(-1),
+        userEmailAddress: userEmailAddress,
       },
       select: {
         longSummary: true,
@@ -22,19 +29,22 @@ export async function POST(request: NextRequest) {
         from: true,
       },
     });
+    console.log("latestEmailSummery is ", latestEmailSummery);
     const longSummary = await decrypt(latestEmailSummery?.longSummary || "");
-    const isThreadId = await prisma.threads.findUnique({
+    const isThreadId = await prisma.threads.findFirst({
       where: {
-        id: latestEmailSummery?.threadId || "",
+        threadId: latestEmailSummery?.threadId || "",
       },
     });
     if (!isThreadId) {
+      console.log("inside thread");
       const res = await prisma.threads.create({
         data: {
-          id: threadId,
+          threadId: threadId,
           latestThreadMailId: ids.at(-1),
           threadSummery: latestEmailSummery?.longSummary || "",
           threadMailCount: 1,
+          userEmailAddress: userEmailAddress || "",
         },
       });
 

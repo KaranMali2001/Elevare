@@ -28,16 +28,16 @@ services:
 
     networks:
       - elevare
-  bg_tasks:
-    build:
-      context: ./bg_tasks
-      dockerfile: ./dockerfile
-    image: bg_tasks
-    container_name: prod_bgTasks
-    env_file:
-      - ./bg_tasks/.env.production
-    networks:
-      - elevare
+  # bg_tasks:
+  #   build:
+  #     context: ./bg_tasks
+  #     dockerfile: ./dockerfile
+  #   image: bg_tasks
+  #   container_name: prod_bgTasks
+  #   env_file:
+  #     - ./bg_tasks/.env.production
+  #   networks:
+  #     - elevare
 networks:
   elevare:
     driver: bridge

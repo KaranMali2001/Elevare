@@ -1,4 +1,5 @@
 import { EmailAnalyticsDashboard } from "@/components/email-analytics-dashboard";
+import { DEFAULT_EMAIL } from "@/constants";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 
@@ -8,8 +9,7 @@ const toIST = (date: Date) => {
 };
 
 export default async function Page() {
-  const session = await auth();
-  const userEmailAddress = session?.user?.email;
+  const userEmailAddress = DEFAULT_EMAIL;
   let emailActivityHeatmap: any = [];
 
   // Query for total summarized emails

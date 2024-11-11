@@ -22,6 +22,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import toast from "react-hot-toast";
 import sendMail from "@/actions/sendMail";
 import axios from "axios";
+import { DEFAULT_EMAIL } from "@/constants";
 const intialGenerateOptions = {
   composeLanguage: "English",
   writingStyle: "Passive",
@@ -34,22 +35,30 @@ const intialGenerateOptions = {
 const IdPageGenerateNav = ({
   setIsResponseBoxOpen,
   currentEmail,
+  url,
 }: {
   setIsResponseBoxOpen: any;
   currentEmail: EmailFullFormat;
+  url: string;
 }) => {
+  const session = useSession();
   const [generatedText, setGeneratedText] = useState<{
     subject: string;
     body: string;
   }>({ subject: "", body: "" });
   const [generateOptions, setGenerateOptions] = useState(intialGenerateOptions);
   const [isPending, startTransition] = useTransition();
-  const session = useSession();
+  let userEmailAddress: string;
+  if (url.startsWith("/Demo")) {
+    userEmailAddress = DEFAULT_EMAIL;
+  } else {
+    userEmailAddress = session.data?.user?.email || "";
+  }
   // console.log("currentMail", currentEmail);
   async function handleGenerateResponse() {
     startTransition(async () => {
       const ReqObj: any = {
-        username: session.data?.user?.email || "",
+        username: userEmailAddress || "",
         custom_knowledge: generateOptions.useCustomKnowledge,
         data: {
           previous_subject: currentEmail?.subject || "", //orinal mail subject
@@ -60,7 +69,7 @@ const IdPageGenerateNav = ({
             "",
           sender: currentEmail?.from || "",
           response: generateOptions.prompt,
-          receiver: session.data?.user?.email || "",
+          receiver: userEmailAddress || "",
           organization: "XYZ",
           response_writing_style: generateOptions.writingStyle,
           length: generateOptions.wordCount,
@@ -113,7 +122,7 @@ const IdPageGenerateNav = ({
           replyMailId: res.id,
           threadId: res.threadId,
           labels: res.labelIds,
-          userEmailAddress: session.data?.user?.email || "",
+          userEmailAddress: userEmailAddress || "",
           idOfOriginalMail: currentEmail?.id || "",
           generatedSubject: generatedText.subject,
           generatedResponse: generatedText.body,

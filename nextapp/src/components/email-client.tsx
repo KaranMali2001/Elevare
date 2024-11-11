@@ -28,7 +28,7 @@ import { storeRealTimeEmails } from "@/utils/storeRealTimeEmails";
 import axios from "axios";
 import { getCookie, setCookie } from "cookies-next";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import GenerateCustomizationOptions from "./GenerateCustomizationOptions";
@@ -38,6 +38,7 @@ import ModalWindowContainer from "./ModalWindowContainer";
 import Overlay from "./Overlay";
 import Skelton from "./Skelton";
 import SpinnerMini from "./SpinnerMini";
+import { DEFAULT_EMAIL } from "@/constants";
 export function EmailClientComponent({
   mails,
   queue,
@@ -55,9 +56,16 @@ export function EmailClientComponent({
   threadIdSet: Set<string>;
   categories: Set<string>;
 }) {
+  let userEmailAddress: string;
+  const url = usePathname();
   const session = useSession();
-  const userEmailAddress = session.data?.user?.email || "";
-
+  console.log("url ", url);
+  if (url.startsWith("/Demo")) {
+    console.log("inside if of url.startsWith");
+    userEmailAddress = DEFAULT_EMAIL;
+  } else {
+    userEmailAddress = session.data?.user?.email || "";
+  }
   // recoil states
   const [emails, setEmails] = useRecoilState(emailsAtom);
   const [dbPageNumber, setdbPageNumber] = useRecoilState(dbPageNumberAtom);
@@ -95,7 +103,7 @@ export function EmailClientComponent({
       console.log("Hii");
       //@ts-ignore
       async function getAccesToken() {
-        const accesToken = await getToken();
+        const accesToken = await getToken(url);
         setCookie("karan", "mali");
         setCookie("Token", accesToken);
         setCookie("expiresAt", String(new Date().getTime() + 3600000));
@@ -191,10 +199,14 @@ export function EmailClientComponent({
           //this block will run if we get some fresh emails at initial render
           emailFromDB = await getEmailsWithPaginationFromDB(
             dbPageNumber,
+            userEmailAddress,
             mails.length //here we only need intial mails cnt to skip over therefore instead of emails state we are using mails
           );
         } else {
-          emailFromDB = await getEmailsWithPaginationFromDB(dbPageNumber); //if we does not fetched single new mail then this block will run
+          emailFromDB = await getEmailsWithPaginationFromDB(
+            dbPageNumber,
+            userEmailAddress
+          ); //if we does not fetched single new mail then this block will run
         }
 
         let temp = getOneEmailForOneThread(emailFromDB, threadIdSet);
@@ -236,7 +248,7 @@ export function EmailClientComponent({
           replyMailId: res.id,
           threadId: res.threadId,
           labels: res.labelIds,
-          userEmailAddress: session.data?.user?.email || "",
+          userEmailAddress: userEmailAddress || "",
           idOfOriginalMail: currentEmail?.id || "",
           generatedSubject: generatedText.subject,
           generatedResponse: generatedText.body,
@@ -260,14 +272,14 @@ export function EmailClientComponent({
     //@ts-ignore
     statTransition(async () => {
       const ReqObj: any = {
-        username: session.data?.user?.email || "",
+        username: userEmailAddress || "",
         custom_knowledge: isEnabled,
         data: {
           previous_subject: currentEmail?.subject || "", //orinal mail subject
           previous_body: currentEmail?.longSummary || "", //long summery or mail body
           sender: currentEmail?.from || "",
           response: prompt,
-          receiver: session.data?.user?.email || "",
+          receiver: userEmailAddress || "",
           organization: "XYZ",
           response_writing_style: reqBody.response_writing_style,
           length: reqBody.length,
@@ -328,7 +340,11 @@ export function EmailClientComponent({
                   >
                     <CardContent className="p-4">
                       <Link
-                        href={`/dashboard/id?id=${email.threadId}`}
+                        href={
+                          url.startsWith("/Demo")
+                            ? `/Demo/id?id=${email.threadId}`
+                            : `/dashboard/id?id=${email.threadId}`
+                        }
                         className="flex-1"
                       >
                         <div className="flex justify-between items-start">

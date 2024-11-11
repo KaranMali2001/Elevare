@@ -1,10 +1,10 @@
-const { MAX_TOKENS } = require("./constants");
-const { encrypt } = require("./encrypt");
-const { formatRawData } = require("./formatRaw");
-const { textFromHtml } = require("./htmltoText");
-const { summerizeInRealTime } = require("./summery");
+import { MAX_TOKENS } from "./constants.js";
+import { encrypt } from "./encrypt.js";
+import { formatRawData } from "./formatRaw.js";
+import { textFromHtml } from "./htmltoText.js";
+import { summerizeInRealTime } from "./summery.js";
 // const { writetxtFile } = require("./writeFile");
-async function worker(ids, emailAddress, accessToken) {
+export async function worker(ids, emailAddress, accessToken) {
   let formattedEmails = [];
   const ReturnArray = [];
   for (let i = 0; i < ids.length; i++) {
@@ -59,7 +59,7 @@ async function worker(ids, emailAddress, accessToken) {
             "Skipped mail",
             finalEmailFormat[i - 1].subject,
             "token cnt",
-            curCnt,
+            curCnt
           );
           skippedMails.push({
             id: formattedEmails[i - 1].id,
@@ -89,7 +89,7 @@ async function worker(ids, emailAddress, accessToken) {
       console.log(
         `Batch contains ${temp.length} mails with`,
         "total tokens cnt",
-        cnt,
+        cnt
       );
       const batch = [];
       let tempj = j;
@@ -124,10 +124,10 @@ async function worker(ids, emailAddress, accessToken) {
 
           if (temp) {
             const encryptedShortSummary = await encrypt(
-              summaryMails[k].shortSummary,
+              summaryMails[k].shortSummary
             );
             const encryptedLongSummary = await encrypt(
-              summaryMails[k].longSummary,
+              summaryMails[k].longSummary
             );
             temp.longSummary = encryptedLongSummary;
             temp.shortSummary = encryptedShortSummary;
@@ -206,6 +206,3 @@ function removeEscapeSequence(text) {
 function tokenCounter(text) {
   return text.length >> 2;
 }
-module.exports = {
-  worker,
-};

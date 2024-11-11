@@ -13,7 +13,7 @@ export async function storeRealTimeEmails(
       const encryptedLongSummary = await encrypt(mail.longSummary);
 
       return {
-        id: mail.id,
+        emailId: mail.id,
         threadId: mail.threadId,
         contentType: mail.contentType,
         shortSummary: mail.shortSummary,
@@ -31,6 +31,7 @@ export async function storeRealTimeEmails(
   );
 
   try {
+    console.log("db mails is", dbMails);
     const result = await prisma.$transaction(async (prisma) => {
       const insertMany = await prisma.emails.createMany({
         data: dbMails,
@@ -41,7 +42,7 @@ export async function storeRealTimeEmails(
           underProcessEmailIds: underProcessEmailIds,
         },
       });
-
+      console.log("insertMany is ", insertMany);
       const dbResponse = await prisma.users.findFirst({
         where: { emailAddress: userEmailAddress },
         select: {

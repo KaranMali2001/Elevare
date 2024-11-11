@@ -1,6 +1,6 @@
-const { MAIL_COUNT } = require("./constants");
+import { MAIL_COUNT } from "./constants.js";
 
-async function handleFirstTimeUser(emailAddress, accessToken) {
+export async function handleFirstTimeUser(emailAddress, accessToken) {
   try {
     const response = await fetch(
       `https://gmail.googleapis.com/gmail/v1/users/me/messages?labelIds=INBOX&q=in:inbox&maxResults=${MAIL_COUNT}`,
@@ -9,7 +9,7 @@ async function handleFirstTimeUser(emailAddress, accessToken) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      },
+      }
     );
     const data = await response.json();
     // console.log("data is ", data);
@@ -27,6 +27,3 @@ async function handleFirstTimeUser(emailAddress, accessToken) {
     throw new Error("Error fetching emails:" + error.message);
   }
 }
-module.exports = {
-  handleFirstTimeUser,
-};

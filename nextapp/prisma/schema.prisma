@@ -9,8 +9,8 @@ datasource db {
 }
 
 model Users {
-  id                   String       @id @map("_id")
-  emailAddress         String       @unique
+  id                   String      @id @map("_id")
+  emailAddress         String      @unique
   emails               Emails[]
   profileUrl           String
   userName             String
@@ -21,12 +21,13 @@ model Users {
   categories           String[]
   files                UserFiles[]
   analytics            Analytics[]
-  ReplyMails           ReplyMails[]
-  joinedDate           DateTime     @default(now())
+  Threads              Threads[]
+  joinedDate           DateTime    @default(now())
 }
 
 model Emails {
-  id               String   @id @map("_id")
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  emailId          String
   threadId         String?
   contentType      String?
   shortSummary     String?
@@ -45,14 +46,17 @@ model Emails {
   replies ReplyMails[]
   user    Users        @relation(fields: [userEmailAddress], references: [emailAddress])
 
-  @@unique([userEmailAddress, id])
+  @@unique([userEmailAddress, emailId])
 }
 
 model Threads {
-  id                 String @id @map("_id")
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  threadId           String
   threadSummery      String
   threadMailCount    Int
   latestThreadMailId String
+  userEmailAddress   String
+  user               Users  @relation(fields: [userEmailAddress], references: [emailAddress])
 }
 
 model ReplyMails {
@@ -67,10 +71,9 @@ model ReplyMails {
   to                 String? //sender in our ReplyEmailFormat type
   cc                 String?
   bcc                String?
-  user               Users    @relation(fields: [userEmailAddress], references: [emailAddress])
   labels             String[]
   category           String?
-  emails             Emails   @relation(fields: [idOfOriginalMail], references: [id])
+  emails             Emails   @relation(fields: [idOfOriginalMail, userEmailAddress], references: [emailId, userEmailAddress])
   userFilesId        String?
 }
 

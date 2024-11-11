@@ -1,4 +1,4 @@
-import { MAIL_COUNT, SUMMERY_LIMIT } from "@/constants";
+import { DEFAULT_EMAIL, MAIL_COUNT, SUMMERY_LIMIT } from "@/constants";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { getSummerizedEmails } from "@/utils/getSummerized";
@@ -7,16 +7,25 @@ import { NextResponse } from "next/server";
 import "server-only";
 import { refreshAccessToken } from "./refreshAccessToken";
 
-export async function GetAllEmails() {
+export async function GetAllEmails(userEmailAddress?: string) {
+  if (userEmailAddress === undefined) {
+    const session = await auth();
+    userEmailAddress = session?.user?.email || "";
+  } else {
+    if (userEmailAddress !== DEFAULT_EMAIL) {
+      throw new Error("You are not too smart");
+    }
+    userEmailAddress = DEFAULT_EMAIL;
+  }
+  console.log("userEmail Address", userEmailAddress);
   const cookieStore = await cookies();
 
-  let accessToken = cookieStore.get("Token")?.value;
+  let accessToken = cookieStore.get("Token")?.value || "";
 
   const expiresAt = cookieStore.get("expiresAt")?.value || 0;
 
   let fetchedByTime: boolean = false;
-  const session = await auth();
-  const userEmailAddress = session?.user?.email;
+
   if (Date.now() > Number(expiresAt)) {
     console.log("refresh token in GetAllEmails");
     const res = await prisma.users.findFirst({
@@ -44,7 +53,8 @@ export async function GetAllEmails() {
       underProcessEmailIds: true,
     },
   });
-
+  console.log("accessToken", accessToken);
+  console.log("lastSummerized", lastSummarized);
   try {
     if (lastSummarized?.lastFetchdTimeStamp === null) {
       response = await fetch(
@@ -53,7 +63,7 @@ export async function GetAllEmails() {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        },
+        }
       );
     } else {
       let timeStamp = new Date(lastSummarized?.lastFetchdTimeStamp!).getTime();
@@ -66,7 +76,7 @@ export async function GetAllEmails() {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-        },
+        }
       );
       fetchedByTime = true;
     }
@@ -75,7 +85,7 @@ export async function GetAllEmails() {
       throw new Error("error while fetching email from api");
     }
     const data = await response.json();
-
+    console.log("data", data);
     if (data?.resultSizeEstimate === 0)
       return NextResponse.json({
         data: [],
@@ -87,7 +97,7 @@ export async function GetAllEmails() {
     }
     //---------------------------------------------------------------------------------
     let ids = data.messages.map(
-      (cur: { id: string; threadId: string }) => cur.id,
+      (cur: { id: string; threadId: string }) => cur.id
     );
 
     console.log("ids are zyzgzgasgasa", ids);
@@ -120,6 +130,7 @@ export async function GetAllEmails() {
       console.log("LIMITS REACHED", finalIDs);
       throw new Error("LIMITS REACHED");
     }
+    console.log("before eget Summerzied");
     ids = ids.slice(0, finalIDs);
     response = await getSummerizedEmails(ids, userEmailAddress, accessToken);
 

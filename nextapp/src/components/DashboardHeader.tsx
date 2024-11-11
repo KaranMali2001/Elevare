@@ -18,7 +18,7 @@ import { Mail, Menu, Search } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { ProfessionalMonochromeButtonsComponent } from "./professional-monochrome-buttons";
@@ -54,6 +54,7 @@ function DashboardHeader() {
   function hanndleChatClick() {
     router.push("/dashboard/chat");
   }
+  console.log("path name is", pathName);
   return (
     <header className="border-b sticky border-gray-300 h-[9vh]  top-0 z-30 flex justify-between items-center px-6 lg:px-8 py-2 bg-white text-gray-700">
       <div className="flex items-center ">
@@ -147,23 +148,31 @@ function DashboardHeader() {
             My Account
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="my-1" />
-          <Link href={"/dashboard/profile"}>
+          <Link
+            href={
+              pathName.startsWith("/Demo")
+                ? "/Demo/profile"
+                : "/dashboard/profile"
+            }
+          >
             <DropdownMenuItem className="hover:bg-gray-100">
               Profile
             </DropdownMenuItem>
           </Link>
-          <DropdownMenuSeparator className="my-1" />
-          <Link href={"/"}>
+          <button>
+            <DropdownMenuSeparator className="my-1 hover:bg-gray-100" />
+
             <DropdownMenuItem
               onClick={async () => {
                 await signOutAction();
                 await signOut();
+                redirect("/");
               }}
               className="hover:bg-gray-100"
             >
               Logout
             </DropdownMenuItem>
-          </Link>
+          </button>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>

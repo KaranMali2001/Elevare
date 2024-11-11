@@ -1,4 +1,4 @@
-async function refreshAccessToken(refreshToken) {
+export async function refreshAccessToken(refreshToken) {
   try {
     const response = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
@@ -24,6 +24,3 @@ async function refreshAccessToken(refreshToken) {
     return "";
   }
 }
-module.exports = {
-  refreshAccessToken,
-};

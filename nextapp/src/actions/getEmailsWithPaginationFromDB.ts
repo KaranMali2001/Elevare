@@ -6,16 +6,16 @@ import decrypt from "@/utils/decrypt";
 
 export async function getEmailsWithPaginationFromDB(
   pageNumber: number,
+  userEmailAddress: string,
   liveFetchedEmailsCnt?: number
 ) {
-  const session = await auth();
   // Calculate how many items to skip
   const skip =
     (pageNumber - 1) * EMAIL_PER_PAGE_FROM_DB + (liveFetchedEmailsCnt || 0);
-  console.log("emails seraching started", session);
+
   const emails = await prisma.emails.findMany({
     where: {
-      userEmailAddress: session?.user?.email || "",
+      userEmailAddress: userEmailAddress || "",
     },
     skip: skip, // Skip already fetched items
     take: EMAIL_PER_PAGE_FROM_DB, // Limit to 10 emails per request

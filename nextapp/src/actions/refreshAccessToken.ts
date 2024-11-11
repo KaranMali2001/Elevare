@@ -1,5 +1,4 @@
 import "server-only";
-import { redirect } from "next/navigation";
 
 export async function refreshAccessToken(refreshToken: string) {
   console.log("inside refresh access token");
@@ -23,6 +22,6 @@ export async function refreshAccessToken(refreshToken: string) {
 
     return data.access_token; // New access token
   } catch (error) {
-    redirect("/login");
+    console.log("there is some error in refresh access token", error);
   }
 }

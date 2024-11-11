@@ -6,7 +6,7 @@ import axios from "axios";
 import { getCookie } from "cookies-next";
 import { Pencil } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState, useTransition } from "react";
+import { use, useEffect, useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import ComposeInputFields from "./ComposeInputFields";
@@ -19,6 +19,8 @@ import Overlay from "./Overlay";
 import SideBarFilters from "./SideBarFilters";
 import SideBarNavigation from "./SideBarNavigation";
 import { Button } from "./ui/button";
+import { usePathname } from "next/navigation";
+import { DEFAULT_EMAIL } from "@/constants";
 
 function SideBar({
   categories,
@@ -27,12 +29,19 @@ function SideBar({
   categories: string[];
   mailCount: number;
 }) {
-  const session = useSession();
   const [isSideBarOpen, setIsSideBarOpen] = useRecoilState(sideBarOpen);
   const [curTab, setCurTab] = useRecoilState(tab);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const url = usePathname();
 
+  const session = useSession();
+  let userEmailAddress: string;
+  if (url.startsWith("/Demo")) {
+    userEmailAddress = DEFAULT_EMAIL;
+  } else {
+    userEmailAddress = session.data?.user?.email || "";
+  }
   //Compose form field states
   const [isLoading, setIsLoading] = useState(false);
   const [receiver, setReceiver] = useState("");
@@ -77,10 +86,10 @@ function SideBar({
       return { ...cur, subject: "", body: "" };
     });
     const ReqObj: any = {
-      username: session.data?.user?.email || "",
+      username: userEmailAddress || "",
       custom_knowledge: isEnabled,
       data: {
-        sender: session.data?.user?.email || "",
+        sender: userEmailAddress || "",
         response: prompt,
         receiver: receiver,
 
@@ -121,7 +130,7 @@ function SideBar({
 
     setIsLoading(true);
     const input = `To: ${receiver}
-From: ${session?.data?.user?.email || ""}
+From: ${userEmailAddress || ""}
 Subject: ${generatedText.subject}
 Content-Type: text/plain; charset="UTF-8"
 
@@ -137,7 +146,7 @@ ${generatedText.body}
         replyMailId: res.id,
         threadId: res.threadId,
         labels: res.labelIds,
-        userEmailAddress: session.data?.user?.email || "",
+        userEmailAddress: userEmailAddress || "",
         idOfOriginalMail: "",
         generatedSubject: generatedText.subject,
         generatedResponse: generatedText.body,

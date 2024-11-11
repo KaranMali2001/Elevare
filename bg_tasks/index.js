@@ -1,9 +1,10 @@
-const { PrismaClient } = require("@prisma/client");
-const { worker } = require("./worker");
-const { FetchByTime } = require("./fetchByTime");
-const { handleFirstTimeUser } = require("./newUser");
-const { refreshAccessToken } = require("./refreshAccessToken");
-const nodemailer = require("nodemailer");
+//const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
+import { worker } from "./worker.js";
+import { FetchByTime } from "./fetchByTime.js";
+import { handleFirstTimeUser } from "./newUser.js";
+import { refreshAccessToken } from "./refreshAccessToken.js";
+import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -24,7 +25,7 @@ const sendErrorEmail = async (e) => {
   };
   await transporter.sendMail(mailOptions);
 };
-require("dotenv").config();
+
 console.log("background tasks started");
 
 const prisma = new PrismaClient();
@@ -164,21 +165,22 @@ async function main() {
   }
 }
 
-const cron = require("node-cron");
-const { default: resetLimits } = require("./ResetLimit/reset");
-cron.schedule("0 0 * * *", async () => {
-  try {
-    await resetLimits();
-  } catch (error) {
-    await sendErrorEmail(error);
-  }
-});
-cron.schedule("*/30 * * * *", async () => {
-  console.log("running a task every 30 minutes", Date.now());
-  try {
-    await main();
-  } catch (error) {
-    await sendErrorEmail(error);
-  }
-  console.log("task done");
-});
+import cron from "node-cron";
+// const { default: resetLimits } = require("./ResetLimit/reset");
+// cron.schedule("0 0 * * *", async () => {
+//   try {
+//     await resetLimits();
+//   } catch (error) {
+//     await sendErrorEmail(error);
+//   }
+// });
+// cron.schedule("*/30 * * * *", async () => {
+//   console.log("running a task every 30 minutes", Date.now());
+//   try {
+//     await main();
+//   } catch (error) {
+//     await sendErrorEmail(error);
+//   }
+//   console.log("task done");
+// });
+await main();
