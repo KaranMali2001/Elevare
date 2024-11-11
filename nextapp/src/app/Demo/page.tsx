@@ -7,7 +7,7 @@ import { getDashBoardMailsFromQueueElement } from "@/utils/getDashBoardMailsFrom
 import { getOneEmailForOneThread } from "@/utils/getOneEmailForOneThread";
 import { storeRealTimeEmails } from "@/utils/storeRealTimeEmails";
 import { headers } from "next/headers";
-
+export const dynamic = "force-dynamic";
 export default async function Page() {
   const headersList = headers();
   const domain = headersList.get("host") || "";

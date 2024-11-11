@@ -2,7 +2,7 @@ import { EmailAnalyticsDashboard } from "@/components/email-analytics-dashboard"
 import { DEFAULT_EMAIL } from "@/constants";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
-
+export const dynamic = "force-dynamic";
 // Helper function to convert date to IST
 const toIST = (date: Date) => {
   return new Date(date.getTime() + (5 * 60 + 30) * 60 * 1000); // Convert to IST (+5:30)
