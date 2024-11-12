@@ -24,9 +24,9 @@ type Message = {
 
 export default function IdPageClient() {
   const [isResponseBoxOpen, setIsResponseBoxOpen] = useState(true);
-  const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
+  const [isSummaryExpanded, setIsSummaryExpanded] = useState(true);
   const [threadSummery, setThreadSummery] = useState("");
-  const [emailIds, setEmailIds] = useState<string[]>([]);
+  const [threadEmails, setThreadEmails] = useState<EmailFullFormat[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSiderBarOpen, setIsSideBarOpen] = useRecoilState(sideBarOpen);
   // const [emails, setEmails] = useRecoilState(emailsAtom);
@@ -43,17 +43,28 @@ export default function IdPageClient() {
         const { messages } = await getEmailIdsByThreadId(threadId!);
 
         const ids = messages.map((message: Message) => message.id);
+        const temp: EmailFullFormat[] = [];
+        for (let i = 0; i < ids.length; i++) {
+          const response = await fetch(`/api/emailFullFormat?id=${ids[i]}`);
+          const { res } = await response.json();
+          temp.push(res);
+        }
+        setThreadEmails(temp);
 
-        setEmailIds(ids);
-        const response = await fetch(`/api/emailFullFormat?id=${ids.at(-1)}`);
-        const { res } = await response.json();
-        setCurrentEmail(res);
+        setCurrentEmail(temp.at(-1));
+        let latestNonSentEmailID;
+        for (let i = temp.length - 1; i >= 0; i--) {
+          if (!temp[i].labels.includes("sent")) {
+            latestNonSentEmailID = temp[i].id;
+          }
+        }
         const res2 = await fetch("/api/getThreadSummery", {
           method: "POST",
-          body: JSON.stringify({ ids, threadId, url }),
+          body: JSON.stringify({ latestNonSentEmailID, threadId, url }),
         });
         console.log("res2 is ingdasgsgaga", res2);
         const data = await res2.json();
+        console.log("data", data);
         setThreadSummery(data);
       } catch (error) {
         toast.error("Failed to Summary Thread ");
@@ -124,8 +135,8 @@ export default function IdPageClient() {
             </div>
           </div>
           <ScrollArea>
-            {emailIds.map((mailID, i) => (
-              <EmailPage key={mailID} id={mailID} />
+            {threadEmails.map((mail, i) => (
+              <EmailPage key={mail.id} mail={mail} />
             ))}
           </ScrollArea>
         </div>

@@ -18,8 +18,8 @@ async function layout({ children }: any) {
   //IMP we will fetch it from db
   return (
     <>
-      <DashboardHeader />{" "}
-      <div className="flex h-[91vh] overflow-hidden bg-[rgb(242,242,247)] ">
+      <DashboardHeader />
+      <div className="flex h-[91vh] relative overflow-hidden bg-[rgb(242,242,247)] ">
         <SideBar categories={categories} mailCount={res?.emailsCnt || 0} />
         {children}
       </div>

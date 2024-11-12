@@ -7,8 +7,14 @@ import encrypt from "@/utils/encrypt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { ids, threadId, url } = await request.json();
-  console.log("url is ", url);
+  // console.log("THreaad sumariztion started", request);
+  const {
+    latestNonSentEmailID,
+    threadId,
+    url,
+  }: { latestNonSentEmailID: string; threadId: string; url: string } =
+    await request.json();
+  // console.log("url is ", url);
   let userEmailAddress: string;
   //first check in db that thread summery exist or not
   if (url.startsWith("/Demo")) {
@@ -20,7 +26,7 @@ export async function POST(request: NextRequest) {
   try {
     const latestEmailSummery = await prisma.emails.findFirst({
       where: {
-        emailId: ids.at(-1),
+        emailId: latestNonSentEmailID,
         userEmailAddress: userEmailAddress,
       },
       select: {
@@ -41,7 +47,7 @@ export async function POST(request: NextRequest) {
       const res = await prisma.threads.create({
         data: {
           threadId: threadId,
-          latestThreadMailId: ids.at(-1),
+          latestThreadMailId: latestNonSentEmailID,
           threadSummery: latestEmailSummery?.longSummary || "",
           threadMailCount: 1,
           userEmailAddress: userEmailAddress || "",
@@ -54,7 +60,7 @@ export async function POST(request: NextRequest) {
       );
       return NextResponse.json(longSummary);
     }
-    if (isThreadId?.latestThreadMailId === ids.at(-1)) {
+    if (isThreadId?.latestThreadMailId === latestNonSentEmailID) {
       const res = await decrypt(isThreadId?.threadSummery || "");
       return NextResponse.json(res);
     }
@@ -64,10 +70,10 @@ export async function POST(request: NextRequest) {
       previous_conversation_summary: isThreadId?.threadSummery || "",
       latest_thread_conversation: {
         latest_sender_name: latestEmailSummery?.from || "",
-        latest_body: latestEmailSummery?.longSummary || "",
+        latest_body: longSummary || "",
       },
     };
-    //console.log("threaObject", JSON.stringify(threadReqObject));
+    console.log("threaObject", JSON.stringify(threadReqObject));
     const res = await fetch(`${process.env.LLM_URL}api/post/summury/thread`, {
       method: "POST",
       body: JSON.stringify(threadReqObject),
@@ -84,10 +90,10 @@ export async function POST(request: NextRequest) {
     const encryptedData = await encrypt(data.thread_summary);
     const response = await prisma.threads.update({
       where: {
-        id: threadId,
+        threadId: threadId || "",
       },
       data: {
-        latestThreadMailId: ids.at(-1),
+        latestThreadMailId: latestNonSentEmailID,
         threadSummery: encryptedData,
         threadMailCount: { increment: 1 },
       },

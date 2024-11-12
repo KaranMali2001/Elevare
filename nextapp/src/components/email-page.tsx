@@ -10,21 +10,22 @@ import Skeleton from "react-loading-skeleton";
 import { useRecoilValue } from "recoil";
 import { emailById } from "../recoil/selectors";
 
-export function EmailPage({ id }: { id: string }) {
+export function EmailPage({ mail }: { mail: EmailFullFormat }) {
   const [email, setEmail] = useState<Mail | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
-  const dashBoardEmail = useRecoilValue(emailById(id));
+  const dashBoardEmail = useRecoilValue(emailById(mail.id));
 
   useEffect(() => {
     const fetchEmail = async () => {
       try {
-        const response = await fetch(`/api/emailFullFormat?id=${id}`);
-        const { res } = await response.json();
-
-        res.shortSummary = dashBoardEmail?.shortSummary;
-        res.longSummary = dashBoardEmail?.longSummary;
-        res.tone = dashBoardEmail?.tone;
+        // const response = await fetch(`/api/emailFullFormat?id=${id}`);
+        const res = {
+          ...mail,
+          shortSummary: dashBoardEmail?.shortSummary,
+          longSummary: dashBoardEmail?.longSummary,
+          tone: dashBoardEmail?.tone,
+        };
         setEmail(res);
       } catch (error) {
         throw error;
@@ -33,7 +34,7 @@ export function EmailPage({ id }: { id: string }) {
       }
     };
     fetchEmail();
-  }, [id]);
+  }, [mail.id]);
   // console.log("Email", email);
 
   if (loading) return <Skeleton />;

@@ -159,15 +159,14 @@ function DashboardHeader() {
               Profile
             </DropdownMenuItem>
           </Link>
-          <button>
-            <DropdownMenuSeparator className="my-1 hover:bg-gray-100" />
-
-            <DropdownMenuItem
-              onClick={async () => {
+          <DropdownMenuSeparator className="my-1 hover:bg-gray-100" />
+          <button onClick={async () => {
                 await signOutAction();
                 await signOut();
-                redirect("/");
-              }}
+              }} className="w-full">
+
+            <DropdownMenuItem
+              
               className="hover:bg-gray-100"
             >
               Logout

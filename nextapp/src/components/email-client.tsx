@@ -104,7 +104,6 @@ export function EmailClientComponent({
       //@ts-ignore
       async function getAccesToken() {
         const accesToken = await getToken(url);
-        setCookie("karan", "mali");
         setCookie("Token", accesToken);
         setCookie("expiresAt", String(new Date().getTime() + 3600000));
       }

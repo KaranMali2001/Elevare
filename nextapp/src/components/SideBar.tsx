@@ -47,6 +47,7 @@ function SideBar({
   const [receiver, setReceiver] = useState("");
   const [prompt, setPrompt] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
+  const [viewPortWidth, setViewPortWidth] = useState<number>(0);
   const [generatedText, setGeneratedText] = useState<{
     subject: string;
     body: string;
@@ -59,7 +60,6 @@ function SideBar({
     response_tone: "Official",
     length: "medium",
   });
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -193,7 +193,7 @@ ${generatedText.body}
       {isPending && <LoadingBar />}
       <div
         className={`${
-          isSideBarOpen ? "min-w-[15vw]" : "w-0 md:w-[4vw]"
+          isSideBarOpen ? " absolute top-0 left-0 h-[91vh] min-w-[30vw] z-10  md:static md:min-w-[20vw] xl:min-w-[15vw]" : "w-0 md:w-[7vw] xl:w-[4vw]"
         } border-r border-gray-200 transition-all duration-300 ease-in-out flex flex-col  bg-white shadow-md overflow-hidden`}
       >
         <SideBarNavigation

@@ -51,7 +51,7 @@ model Emails {
 
 model Threads {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  threadId           String
+  threadId           String @unique
   threadSummery      String
   threadMailCount    Int
   latestThreadMailId String

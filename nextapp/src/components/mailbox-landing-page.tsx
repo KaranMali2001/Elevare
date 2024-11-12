@@ -101,6 +101,7 @@ export function MailboxLandingPageComponent() {
   const dashOrLoginURL = session.data?.user?.email ? "/dashboard" : "/login";
   const [openFAQIndex, setOpenFAQIndex] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -121,53 +122,55 @@ export function MailboxLandingPageComponent() {
           animate={{ opacity: 1 }}
           className={`flex flex-col min-h-screen font-sans ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
         >
-          <header
-            className={`flex justify-between items-center py-4 px-6 border-b ${isDarkMode ? "bg-gray-800 bg-opacity-80 border-gray-700" : "bg-white bg-opacity-80 border-gray-200"} backdrop-blur-md fixed w-full z-10`}
-          >
-            <div className="flex items-center space-x-6">
-              <Link href="/" className="text-2xl font-bold">
-                <Image
-                  src="/image.svg"
-                  height={140}
-                  width={140}
-                  alt="Brand Logo"
-                ></Image>
-              </Link>
-              <nav className="hidden md:flex space-x-6">
-                {["Features", "Pricing", "Testimonials", "Help"].map(
-                  (item, index) => (
-                    <Link
-                      key={index}
-                      href="#"
-                      className={`text-sm font-medium ${isDarkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
-                    >
-                      {item}
-                    </Link>
-                  )
-                )}
-              </nav>
-            </div>
-            <div className="flex items-center space-x-4">
-              {/* <button
+          {
+            <header
+              className={`flex justify-between items-center py-4 px-6 border-b ${isDarkMode ? "bg-gray-800 bg-opacity-80 border-gray-700" : "bg-white bg-opacity-80 border-gray-200"} backdrop-blur-md fixed w-full z-10`}
+            >
+              <div className="flex items-center space-x-6">
+                <Link href="/" className="text-2xl font-bold">
+                  <Image
+                    src="/image.svg"
+                    height={140}
+                    width={140}
+                    alt="Brand Logo"
+                  ></Image>
+                </Link>
+                <nav className="hidden md:flex space-x-6">
+                  {["Features", "Pricing", "Testimonials", "Help"].map(
+                    (item, index) => (
+                      <Link
+                        key={index}
+                        href={`#${item}`}
+                        className={`text-sm font-medium ${isDarkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
+                      >
+                        {item}
+                      </Link>
+                    )
+                  )}
+                </nav>
+              </div>
+              <div className="flex items-center space-x-4">
+                {/* <button
                 onClick={toggleDarkMode}
                 className={`p-2 rounded-full ${isDarkMode ? "bg-gray-700 text-yellow-400" : "bg-gray-200 text-gray-700"} transition-colors duration-200`}
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button> */}
-              <Link
-                href={dashOrLoginURL}
-                className={`text-sm font-medium ${isDarkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
-              >
-                Sign in
-              </Link>
-              <Link
-                href={dashOrLoginURL}
-                className={`${isDarkMode ? "bg-white text-gray-900" : "bg-black text-white"} px-4 py-2 rounded-full text-sm font-medium transition-transform duration-200 hover:scale-105`}
-              >
-                Get Started
-              </Link>
-            </div>
-          </header>
+                <Link
+                  href={dashOrLoginURL}
+                  className={`text-sm font-medium ${isDarkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href={dashOrLoginURL}
+                  className={`${isDarkMode ? "bg-white text-gray-900" : "bg-black text-white"} px-4 py-2 rounded-full text-sm font-medium transition-transform duration-200 hover:scale-105`}
+                >
+                  Get Started
+                </Link>
+              </div>
+            </header>
+          }
 
           <main className="flex-grow pt-16">
             <section className="text-center py-20 px-6">
@@ -219,7 +222,9 @@ export function MailboxLandingPageComponent() {
                 />
               </motion.div>
             </section>
-
+            <div className="" id="Features">
+              .
+            </div>
             <motion.section
               className={`py-20 px-6 ${isDarkMode ? "bg-gray-800" : "bg-[rgb(245,245,247)]"}`}
               initial={{ opacity: 0 }}
@@ -295,7 +300,6 @@ export function MailboxLandingPageComponent() {
                 </div>
               </div>
             </motion.section>
-
             <motion.section
               className="py-20 px-6"
               initial={{ opacity: 0 }}
@@ -348,14 +352,14 @@ export function MailboxLandingPageComponent() {
                 </div>
               </div>
             </motion.section>
-
+            \
             <motion.section
               className={`py-20  px-6 ${isDarkMode ? "bg-gray-800" : "bg-[rgb(245,245,247)]"}`}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
             >
-              <div className="max-w-6xl mx-auto">
+              <div id="" className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center justify-between">
                   <motion.div
                     className="md:w-1/2 mb-8 md:mb-0"
@@ -401,7 +405,9 @@ export function MailboxLandingPageComponent() {
                 </div>
               </div>
             </motion.section>
-
+            <div className="" id="Pricing">
+              .
+            </div>
             <motion.section
               className="py-20 px-6"
               initial={{ opacity: 0 }}
@@ -503,7 +509,9 @@ export function MailboxLandingPageComponent() {
                 </div>
               </div>
             </motion.section>
-
+            <div className="" id="Testimonials">
+              .
+            </div>
             <motion.section
               className={`py-20 px-6 ${isDarkMode ? "bg-gray-800" : "bg-[rgb(245,245,247)]"}`}
               initial={{ opacity: 0 }}
@@ -560,7 +568,6 @@ export function MailboxLandingPageComponent() {
                 </div>
               </div>
             </motion.section>
-
             <motion.section
               className="py-20 px-6"
               initial={{ opacity: 0 }}
@@ -581,7 +588,7 @@ export function MailboxLandingPageComponent() {
                       free to contact us.
                     </p>
                     <Link
-                      href="#"
+                      href="mailto:rohit2khairmode2024@gmail.com"
                       className="text-purple-600 font-medium inline-flex items-center hover:underline"
                     >
                       Contact Support
@@ -614,7 +621,6 @@ export function MailboxLandingPageComponent() {
                 </div>
               </div>
             </motion.section>
-
             <motion.section
               className={`py-20 px-6 text-center ${isDarkMode ? "bg-gray-800" : "bg-[rgb(245,245,247)]"}`}
               initial={{ opacity: 0 }}
@@ -631,14 +637,16 @@ export function MailboxLandingPageComponent() {
                 never before.
               </p>
               <Link
-                href="#"
+                href={dashOrLoginURL}
                 className={`inline-block ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-200" : "bg-black text-white hover:bg-gray-800"} px-8 py-4 rounded-full text-lg font-medium transition-all duration-200 hover:scale-105`}
               >
                 Get Started Now
               </Link>
             </motion.section>
           </main>
-
+          <div className="" id="Help">
+            .
+          </div>
           <footer
             className={`${isDarkMode ? "bg-gray-900" : "bg-white"} py-12 px-6`}
           >
@@ -676,17 +684,34 @@ export function MailboxLandingPageComponent() {
                   © 2024 Elevare. All rights reserved.
                 </div>
                 <div className="flex space-x-6">
-                  {["Twitter", "Facebook", "Instagram", "GitHub"].map(
-                    (social, index) => (
-                      <Link
-                        key={index}
-                        href="#"
-                        className={`text-sm ${isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
-                      >
-                        {social}
-                      </Link>
-                    )
-                  )}
+                  <Link
+                    key={1}
+                    href="#"
+                    className={`text-sm ${isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
+                  >
+                    Twitter
+                  </Link>
+                  <Link
+                    key={2}
+                    href="#"
+                    className={`text-sm ${isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
+                  >
+                    Facebook
+                  </Link>
+                  <Link
+                    key={3}
+                    href="#"
+                    className={`text-sm ${isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
+                  >
+                    Instagram
+                  </Link>
+                  <Link
+                    key={4}
+                    href="https://github.com/KaranMali2001/Elevare"
+                    className={`text-sm ${isDarkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-gray-900"} transition-colors duration-200`}
+                  >
+                    GitHub
+                  </Link>
                 </div>
               </div>
             </div>

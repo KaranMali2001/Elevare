@@ -2,6 +2,7 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Mail, Shield } from "lucide-react";
+import Link from "next/link";
 
 export function PrivacyPolicyComponent() {
   return (
@@ -9,12 +10,12 @@ export function PrivacyPolicyComponent() {
       <header className="bg-white border-b border-gray-200 py-4">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2">
               <Shield className="h-6 w-6 text-gray-600" />
               <span className="text-xl font-semibold text-gray-800">
                 Elevare Privacy Policy
               </span>
-            </div>
+            </Link>
             <a
               href="mailto:rohit2khairmode2024@gmail.com"
               className="flex items-center text-sm text-gray-600 hover:text-gray-800"
