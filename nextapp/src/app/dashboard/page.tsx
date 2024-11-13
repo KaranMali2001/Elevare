@@ -15,7 +15,7 @@ export default async function Page() {
   const fullUrl = headersList.get("referer") || "";
   const [, pathname] =
     fullUrl.match(new RegExp(`https?:\/\/${domain}(.*)`)) || [];
-  console.log("pathname is", pathname);
+
   const res = await GetAllEmails();
   const categories = new Set(["security", "newsletter", "education", "others"]); //IMP we will fetch this from db
 
