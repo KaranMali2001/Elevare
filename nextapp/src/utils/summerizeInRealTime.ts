@@ -2,7 +2,7 @@
 
 export async function summerizeInRealTime(
   emails: finalbatchOfEmailsReqBody,
-  userEmailAddress: string,
+  userEmailAddress: string
 ) {
   let data;
   let URL;
@@ -25,12 +25,14 @@ export async function summerizeInRealTime(
     });
 
     if (!res.ok) {
+      console.log("error from LLM", await res.json());
       throw new Error("error from LLM to generate response");
     }
     const summaryMails: batchOfEmailsResBody[] = await res.json();
 
     return summaryMails;
   } catch (e: any) {
+    console.log("error from LLM", await e);
     throw new Error("error form summery.ts" + e);
   }
 }

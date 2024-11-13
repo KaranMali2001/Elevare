@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     url,
   }: { latestNonSentEmailID: string; threadId: string; url: string } =
     await request.json();
-  // console.log("url is ", url);
+  console.log("latestNonSentEmailID ", latestNonSentEmailID);
   let userEmailAddress: string;
   //first check in db that thread summery exist or not
   if (url.startsWith("/Demo")) {
@@ -40,8 +40,10 @@ export async function POST(request: NextRequest) {
     const isThreadId = await prisma.threads.findFirst({
       where: {
         threadId: latestEmailSummery?.threadId || "",
+        userEmailAddress: userEmailAddress,
       },
     });
+    console.log("isThreadID", isThreadId);
     if (!isThreadId) {
       console.log("inside thread");
       const res = await prisma.threads.create({
@@ -60,14 +62,15 @@ export async function POST(request: NextRequest) {
       );
       return NextResponse.json(longSummary);
     }
+    const threadSummary = await decrypt(isThreadId?.threadSummery || "");
     if (isThreadId?.latestThreadMailId === latestNonSentEmailID) {
-      const res = await decrypt(isThreadId?.threadSummery || "");
-      return NextResponse.json(res);
+      console.log("from db");
+      return NextResponse.json(threadSummary);
     }
 
     const threadReqObject: ThreadReqBody = {
       thread_id: threadId,
-      previous_conversation_summary: isThreadId?.threadSummery || "",
+      previous_conversation_summary: threadSummary,
       latest_thread_conversation: {
         latest_sender_name: latestEmailSummery?.from || "",
         latest_body: longSummary || "",
@@ -87,7 +90,9 @@ export async function POST(request: NextRequest) {
     if (!data.thread_summary) {
       throw new Error("No thread summary found from LLM API");
     }
-    const encryptedData = await encrypt(data.thread_summary);
+    const encryptedData = await encrypt(
+      data.thread_summary || data.thread_summery
+    );
     const response = await prisma.threads.update({
       where: {
         threadId: threadId || "",

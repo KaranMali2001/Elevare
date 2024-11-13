@@ -9,8 +9,8 @@ datasource db {
 }
 
 model Users {
-  id                   String      @id @map("_id")
-  emailAddress         String      @unique
+  id                   String          @id @map("_id")
+  emailAddress         String          @unique
   emails               Emails[]
   profileUrl           String
   userName             String
@@ -22,7 +22,8 @@ model Users {
   files                UserFiles[]
   analytics            Analytics[]
   Threads              Threads[]
-  joinedDate           DateTime    @default(now())
+  Notifications        Notifications[]
+  joinedDate           DateTime        @default(now())
 }
 
 model Emails {
@@ -87,6 +88,15 @@ model UserFiles {
   user         Users    @relation(fields: [emailAddress], references: [emailAddress])
 
   // user             Users        @relation(fields: [userEmailAddress], references: [emailAddress])
+}
+
+model Notifications {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  description      String
+  isRead           Boolean
+  userEmailAddress String  @unique
+  users            Users   @relation(fields: [userEmailAddress], references: [emailAddress])
 }
 
 //add new label model and add to analytics

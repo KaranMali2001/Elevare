@@ -38,7 +38,7 @@ function SideBarFilters({
     if (urlARR.at(-1) === "dashboard") setCurTab("Inbox");
     else setCurTab("");
   }, []);
-  console.log(curTab);
+  // console.log(curTab);
   if (curTab !== "Inbox") return null;
   return (
     <div className="space-y-2">

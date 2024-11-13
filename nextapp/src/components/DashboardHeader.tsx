@@ -14,7 +14,7 @@ import { SEARCH_TEXT_LEN } from "@/constants";
 import { useQuery } from "@/hooks/useQuery";
 import { emailsAtom, sideBarOpen } from "@/recoil/atom";
 import { dateFormatter } from "@/utils/dateFormatter";
-import { Mail, Menu, Search } from "lucide-react";
+import { Mail, Menu, RefreshCw, Search } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { ProfessionalMonochromeButtonsComponent } from "./professional-monochrome-buttons";
 import { Card } from "./ui/card";
+import { motion } from "framer-motion";
 
 function DashboardHeader() {
   const session = useSession();
@@ -32,6 +33,8 @@ function DashboardHeader() {
   const [searchResults, setSearchResults] = useState<DashBoardEmail[]>([]);
   const [emails, setEmail] = useRecoilState(emailsAtom);
   const [isSideBarOpen, setIsSideBarOpen] = useRecoilState(sideBarOpen);
+  const [isRefreshHovered, setIsRefreshHovered] = useState(false);
+
   const { searchEmails, isLoading, error } = useQuery(searchQuery);
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -54,6 +57,10 @@ function DashboardHeader() {
   function hanndleChatClick() {
     router.push("/dashboard/chat");
   }
+  const handleRefresh = () => {
+    console.log("inside handleRfresh page");
+    window.location.reload();
+  };
   console.log("path name is", pathName);
   return (
     <header className="border-b sticky border-gray-300 h-[9vh]  top-0 z-30 flex justify-between items-center px-6 lg:px-8 py-2 bg-white text-gray-700">
@@ -125,55 +132,76 @@ function DashboardHeader() {
           )}
         </div>
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+      <div className="flex gap-2">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          onHoverStart={() => setIsRefreshHovered(true)}
+          onHoverEnd={() => setIsRefreshHovered(false)}
+        >
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
-            className="rounded-full border-gray-300 hover:border-gray-400"
+            className="mr-2 self-center bg-gray-200 flex justify-center rounded-md "
+            onClick={() => window.location.reload()}
           >
-            <img
-              src={session.data?.user?.image || ""}
-              width={36}
-              height={36}
-              alt="Avatar"
-              className="rounded-full"
-              style={{ aspectRatio: "36/36", objectFit: "cover" }}
-            />
+            <motion.div
+              animate={{ rotate: isRefreshHovered ? 360 : 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              <RefreshCw className="h-7 w-7" />
+            </motion.div>
+            <span className="sr-only">Refresh</span>
           </Button>
-        </DropdownMenuTrigger>
+        </motion.div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full border-gray-300 hover:border-gray-400"
+            >
+              <img
+                src={session.data?.user?.image || ""}
+                width={36}
+                height={36}
+                alt="Avatar"
+                className="rounded-full"
+                style={{ aspectRatio: "36/36", objectFit: "cover" }}
+              />
+            </Button>
+          </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-48 shadow-xl">
-          <DropdownMenuLabel className="text-gray-600">
-            My Account
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator className="my-1" />
-          <Link
-            href={
-              pathName.startsWith("/Demo")
-                ? "/Demo/profile"
-                : "/dashboard/profile"
-            }
-          >
-            <DropdownMenuItem className="hover:bg-gray-100">
-              Profile
-            </DropdownMenuItem>
-          </Link>
-          <DropdownMenuSeparator className="my-1 hover:bg-gray-100" />
-          <button onClick={async () => {
+          <DropdownMenuContent align="end" className="w-48 shadow-xl">
+            <DropdownMenuLabel className="text-gray-600">
+              My Account
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator className="my-1" />
+            <Link
+              href={
+                pathName.startsWith("/Demo")
+                  ? "/Demo/profile"
+                  : "/dashboard/profile"
+              }
+            >
+              <DropdownMenuItem className="hover:bg-gray-100">
+                Profile
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator className="my-1 hover:bg-gray-100" />
+            <button
+              onClick={async () => {
                 await signOutAction();
                 await signOut();
-              }} className="w-full">
-
-            <DropdownMenuItem
-              
-              className="hover:bg-gray-100"
+              }}
+              className="w-full"
             >
-              Logout
-            </DropdownMenuItem>
-          </button>
-        </DropdownMenuContent>
-      </DropdownMenu>
+              <DropdownMenuItem className="hover:bg-gray-100">
+                Logout
+              </DropdownMenuItem>
+            </button>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }

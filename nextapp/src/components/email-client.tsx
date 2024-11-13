@@ -305,10 +305,7 @@ export function EmailClientComponent({
     setIsQuickReplyOpen(!isQuickReplyOpen);
   };
   const router = useRouter();
-  const handleRefresh = () => {
-    console.log("inside handleRfresh page");
-    window.location.reload();
-  };
+
   const finalMails = filter.size > 0 ? filteredMails : displayMails;
   if (isFilteringMails || initialLoad) return <Skelton />;
   if (
@@ -325,9 +322,6 @@ export function EmailClientComponent({
         <Skelton />
       ) : (
         <div className={` flex-1 flex flex-col`}>
-          <div className="px-4 py-1 flex justify-end">
-            <Button onClick={handleRefresh}>Refresh </Button>
-          </div>
           <ScrollArea className="flex-1 w-full">
             <div className="p-4 space-y-4">
               {finalMails.length > 0 ? (

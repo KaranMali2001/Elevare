@@ -1,4 +1,3 @@
-env
 .env
 logs/vector_db.log
 *.log

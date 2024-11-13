@@ -12,16 +12,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 
-type Message = {
-  id: string;
-  threadId: string;
-  labelIds: string[];
-  snippet: string;
-  sizeEstimate: number;
-  historyId: string;
-  internalDate: string;
-};
-
 export default function IdPageClient() {
   const [isResponseBoxOpen, setIsResponseBoxOpen] = useState(true);
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(true);
@@ -29,35 +19,26 @@ export default function IdPageClient() {
   const [threadEmails, setThreadEmails] = useState<EmailFullFormat[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSiderBarOpen, setIsSideBarOpen] = useRecoilState(sideBarOpen);
-  // const [emails, setEmails] = useRecoilState(emailsAtom);
   const [currentEmail, setCurrentEmail] = useState<EmailFullFormat>();
   const router = useRouter();
   const searchParams = useSearchParams();
   const url = usePathname();
-  console.log("search param s", url);
   const threadId = searchParams.get("id");
   useEffect(() => {
-    console.log("url is ", url);
     const fetchEmailsByThreadId = async () => {
       try {
-        const { messages } = await getEmailIdsByThreadId(threadId!);
-
-        const ids = messages.map((message: Message) => message.id);
-        const temp: EmailFullFormat[] = [];
-        for (let i = 0; i < ids.length; i++) {
-          const response = await fetch(`/api/emailFullFormat?id=${ids[i]}`);
-          const { res } = await response.json();
-          temp.push(res);
-        }
-        setThreadEmails(temp);
-
-        setCurrentEmail(temp.at(-1));
+        const messages = await getEmailIdsByThreadId(threadId!);
+        console.log("messages", messages);
+        setThreadEmails(messages);
+        setCurrentEmail(messages.at(-1));
         let latestNonSentEmailID;
-        for (let i = temp.length - 1; i >= 0; i--) {
-          if (!temp[i].labels.includes("sent")) {
-            latestNonSentEmailID = temp[i].id;
+        for (let i = messages.length - 1; i >= 0; i--) {
+          if (!messages[i].labels.includes("SENT")) {
+            latestNonSentEmailID = messages[i].id;
+            break;
           }
         }
+        console.log("latest not send email", latestNonSentEmailID);
         const res2 = await fetch("/api/getThreadSummery", {
           method: "POST",
           body: JSON.stringify({ latestNonSentEmailID, threadId, url }),
