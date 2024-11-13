@@ -6,7 +6,7 @@ export async function summerizeInRealTime(emails, emailAddress) {
     URL = `${process.env.LLM_URL}api/post/summury/mail`;
     data = JSON.stringify(emails.at(0));
   } else {
-    URL = `${process.env.LLM_URL}http://127.0.0.1:8000/api/post/summury/batch_of_mails`;
+    URL = `${process.env.LLM_URL}api/post/summury/batch_of_mails`;
     data = JSON.stringify(emails);
   }
   // console.log("Input to LLM", data);

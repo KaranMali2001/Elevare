@@ -10,10 +10,9 @@ export async function worker(ids, emailAddress, accessToken) {
   for (let i = 0; i < ids.length; i++) {
     const temp = await formatRawData(ids[i], accessToken);
     if (!temp) return;
-    const encryptedFrom = await encrypt(temp.from);
-    const encryptedSubject = await encrypt(temp.subject);
+
     ReturnArray.push({
-      id: temp.id,
+      emailId: temp.id,
       threadId: temp.threadId,
       contentType: temp.contentType,
       date: temp.date,
@@ -22,10 +21,9 @@ export async function worker(ids, emailAddress, accessToken) {
       label: temp.labelIds,
       shortSummary: "",
       longSummary: "",
-      from: encryptedFrom,
+      from: temp.from,
       tone: "",
-      subject: encryptedSubject,
-      vectorEmbeddings: [0.0],
+      subject: temp.subject,
     });
     formattedEmails.push(temp);
   }
@@ -62,7 +60,7 @@ export async function worker(ids, emailAddress, accessToken) {
             curCnt
           );
           skippedMails.push({
-            id: formattedEmails[i - 1].id,
+            emailId: formattedEmails[i - 1].id,
             threadId: formattedEmails[i - 1].threadId,
             label: formattedEmails[i - 1].labelIds,
 
@@ -105,15 +103,14 @@ export async function worker(ids, emailAddress, accessToken) {
       const summaryMails = await summerizeInRealTime(finalBatch, emailAddress);
       if (summaryMails.constructor !== Array) {
         const temp = ReturnArray[j];
-        const encryptedShortSummary = await encrypt(summaryMails.shortSummary);
-        const encryptedLongSummary = await encrypt(summaryMails.longSummary);
+
+        const encryptedLongSummary = await encrypt(summaryMails.summary);
         if (temp) {
           temp.longSummary = encryptedLongSummary;
-          temp.shortSummary = encryptedShortSummary;
+          temp.shortSummary = summaryMails.short_summary;
           temp.tone = summaryMails.tone;
           temp.category = summaryMails.category;
           temp.sentiment = summaryMails.sentiment;
-          temp.vectorEmbeddings = summaryMails.vectorEmbeddings;
         }
         j++;
       } else {
@@ -123,19 +120,13 @@ export async function worker(ids, emailAddress, accessToken) {
           const temp = ReturnArray[j];
 
           if (temp) {
-            const encryptedShortSummary = await encrypt(
-              summaryMails[k].shortSummary
-            );
-            const encryptedLongSummary = await encrypt(
-              summaryMails[k].longSummary
-            );
+            const encryptedLongSummary = await encrypt(summaryMails[k].summary);
             temp.longSummary = encryptedLongSummary;
-            temp.shortSummary = encryptedShortSummary;
+            temp.shortSummary = summaryMails[k].short_summary;
 
             temp.tone = summaryMails[k].tone;
             temp.category = summaryMails[k].category;
             temp.sentiment = summaryMails[k].sentiment;
-            temp.vectorEmbeddings = summaryMails[k].vectorEmbeddings;
           }
           k++;
         }

@@ -29,6 +29,7 @@ const sendErrorEmail = async (e) => {
 console.log("background tasks started");
 
 const prisma = new PrismaClient();
+console.log("Prisma client created", prisma);
 async function main() {
   let ids;
   const Users = await prisma.users.findMany({
@@ -86,29 +87,36 @@ async function main() {
       let temp = [];
       let returnArrayInd = 0;
       let skippedInd = 0;
+      console.log("ids", ids.length);
       for (let i = 0; i < ids.length; i++) {
         if (
           skippedInd < skippedMails.length &&
-          ids[i] == skippedMails[skippedInd].id
+          ids[i] == skippedMails[skippedInd].emailId
         ) {
+          console.log("ids[i]", ids[i]);
           temp.push(skippedMails[skippedInd]);
           skippedInd++;
         } else if (
           returnArrayInd < ReturnArray.length &&
-          ids[i] == ReturnArray[returnArrayInd].id
+          ids[i] == ReturnArray[returnArrayInd].emailId
         ) {
           if (ReturnArray[returnArrayInd].longSummary === "") {
             break;
           }
+
           temp.push(ReturnArray[returnArrayInd]);
           returnArrayInd++;
         }
       }
-      temp = temp.reverse();
 
       try {
+        temp = temp.slice(1);
+        console.log("temp", temp);
+        temp = temp.reverse();
+
         if (temp.length !== 0) {
-          const result = await prisma.$transaction(async (primsa) => {
+          console.log("temp.length", temp.length);
+          await prisma.$transaction(async (primsa) => {
             const dbResponse = await prisma.emails.createMany({ data: temp });
             console.log("db response", dbResponse);
             const summeryEmails = await prisma.analytics.upsert({
@@ -116,12 +124,17 @@ async function main() {
                 userEmailAddress: Users[i].emailAddress,
               },
               update: {
-                totalSummerized: { increment: dbResponse.length },
-                dailySummeryCount: { increment: dbResponse.length },
+                totalSummerized: { increment: dbResponse.count },
+                dailySummeryCount: { increment: dbResponse.count },
               },
               create: {
-                totalSummerized: dbResponse.length,
-                dailySummeryCount: dbResponse.length,
+                userEmailAddress: Users[i].emailAddress,
+                totalSummerized: dbResponse.count,
+                dailySummeryCount: dbResponse.count,
+                totalGenerated: 0, // Or set to any initial value you prefer
+                totalSent: 0, // Or set to any initial value you prefer
+                dailyGeneratedCount: 0,
+                dailySentCount: 0,
               },
             });
             console.log(
@@ -152,7 +165,6 @@ async function main() {
             });
             console.log("lastFetchUpdated", dbResponse2);
           });
-          console.log("result ", result);
         }
       } catch (error) {
         console.log("error", error);
@@ -166,21 +178,24 @@ async function main() {
 }
 
 import cron from "node-cron";
-// const { default: resetLimits } = require("./ResetLimit/reset");
-// cron.schedule("0 0 * * *", async () => {
-//   try {
-//     await resetLimits();
-//   } catch (error) {
-//     await sendErrorEmail(error);
-//   }
-// });
-// cron.schedule("*/30 * * * *", async () => {
-//   console.log("running a task every 30 minutes", Date.now());
-//   try {
-//     await main();
-//   } catch (error) {
-//     await sendErrorEmail(error);
-//   }
-//   console.log("task done");
-// });
-await main();
+
+import { resetLimits } from "./ResetLimit/reset.js";
+cron.schedule("0 0 * * *", async () => {
+  try {
+    console.log("trying to reset limit");
+    await resetLimits();
+  } catch (error) {
+    await sendErrorEmail(error);
+  }
+});
+cron.schedule("*/30 * * * *", async () => {
+  console.log("running a task every 30 minutes", Date.now());
+  try {
+    await main();
+  } catch (error) {
+    await sendErrorEmail(error);
+  }
+  console.log("task done");
+});
+
+// await main();
