@@ -229,6 +229,26 @@ export function PrivacyPolicyComponent() {
                 needed, we will securely delete or anonymize it.
               </p>
             </section>
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+                Google Workspace APIs
+              </h2>
+              <p className="text-gray-700">
+                Google Workspace APIs are not used to develop, improve, or train
+                generalized AI and/or ML models. Our application does not retain
+                user data obtained through Workspace APIs for such purposes.
+              </p>
+            </section>
+            <section>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+                limited use requirement policy
+              </h2>
+              <p className="text-gray-700">
+                Our application adheres to the limited use requirement policy,
+                and we ensure that user data is used solely for the intended
+                purpose.
+              </p>
+            </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">
