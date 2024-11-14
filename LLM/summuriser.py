@@ -7,7 +7,8 @@ import yaml
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel
+from langchain_core.pydantic_v1 import Field
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel, Field, validator
 from typing import List, Optional

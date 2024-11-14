@@ -20,14 +20,16 @@ from logger import logger
 # import asyncio
 # import pandas as pd
 from embeddings_task.get_embeddings import get_embeddings
-from chat_bot import chat_bot, chat_bot_get
+from chat_test import get_graph  , inv 
 from mail_summury_embeddings import add_mail_embeddings
 
 
 try:
     app = FastAPI()
     llm = init_llm()
-    chat_chain = chat_bot()
+    graph = get_graph()
+    # graph = get_react_graph()
+    print(graph)
     genrate_llm = genrate_init_llm()
     q_client = QdrantClient(url="http://localhost:6333")
 except Exception as e:
@@ -334,7 +336,7 @@ async def create_embeddings(response, maps, user_name):
 
 @app.post("/api/chat/")
 async def chat(response: Chat_Query):
-    if chat_chain:
+    if graph:
         try:
             query = response.query
             id = response.id
@@ -342,7 +344,8 @@ async def chat(response: Chat_Query):
             unmae = "NONE"
             # custom_knowledge = get_custom_knowledge(retriver,unmae,  query)
             custom_knowledge = "None"
-            ai_response = chat_bot_get(chat_chain, custom_knowledge, query)
+            ai_response = inv(graph=graph, custom_knowledge=custom_knowledge, querry=query , id=id)
+            print(ai_response)
             return ai_response
         except Exception as e:
             logger.error(e)

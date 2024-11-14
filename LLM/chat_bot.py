@@ -1,123 +1,69 @@
-
-from langchain_groq import ChatGroq
-import os
-from langchain import PromptTemplate
-from langchain.schema.output_parser import StrOutputParser
-import yaml
-from dotenv import load_dotenv
+from langgraph.prebuilt import create_react_agent
+from langchain.schema.messages import BaseMessage
+from typing import Annotated, List, Sequence
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from vector_db_ops import Vector_DB
-from langchain.schema.runnable import RunnablePassthrough
-from langchain.memory import ConversationSummaryMemory
-from langchain_community.chat_message_histories import ChatMessageHistory
-from vector_db_ops import Vector_DB
-load_dotenv()
-chat_history = ChatMessageHistory()
 
-def load_prompts(yaml_file):
-    try:
-        with open(yaml_file, 'r') as file:
-            return yaml.safe_load(file)
-    except Exception as e:
-        print(e)
-        return None
+# ... (previous imports and setup)
 
+class CustomState(TypedDict):
+    messages: Annotated[List[BaseMessage], add_messages]
+    is_last_step: str
+    knowledge: dict  # Add this line to include custom knowledge
 
-def get_llm():
-    api_key2 = os.getenv('GROQ_API_KEY_1')
-    llm = ChatGroq(
-        model="llama3-70b-8192",
-        api_key=api_key2,
-        temperature=0.9,
-        max_tokens=None,
-        timeout=None,
-        max_retries=2,
+# Define your custom knowledge
+custom_knowledge = {
+    "company_name": "Elevare",
+    "industry": "Technology",
+    "mission_statement": "To provide innovative solutions for email assistance"
+}
+
+# Create a custom prompt template
+custom_prompt_template = ChatPromptTemplate.from_messages([
+    ("system", "You are Elevare, a helpful bot for email assistance. You have access to the following information:"),
+    ("tool", custom_knowledge),
+    ("placeholder", "{messages}")
+])
+
+# Create the React agent with custom knowledge and prompt
+llm = get_llm()
+tools = [wiki_tool]
+graph = create_react_agent(
+    llm,
+    tools=tools,
+    state_schema=CustomState,
+    state_modifier=custom_prompt_template
+)
+
+# Now you can use the graph to generate responses
+def invoke(graph, message_history, knowledge=None):
+    config = {"configurable": {"thread_id": uuid.uuid4().hex}}
+    events = graph.stream(
+        {"messages": [("user", message_history)]},
+        stream_mode="values",
+        config=config
     )
-    return llm
+    
+    ai_response = None
+    for event in events:
+        if isinstance(event, dict) and "messages" in event:
+            ai_response = event["messages"][-1][1]  # Get the AI's response
+            
+            # If we provided custom knowledge, update it
+            if knowledge:
+                ai_response.update(knowledge)
+            
+            return ai_response
+    
+    raise ValueError("No valid response found")
 
+# Example usage
+message_history = [
+    "Hello, I need help with my email.",
+    "I'm having trouble sending emails."
+]
 
+knowledge = custom_knowledge.copy()  # Create a copy of the knowledge dictionary
+knowledge["user_context"] = "This user has been experiencing issues with their email."
 
-
-
-
-
-
-prompts = load_prompts('prompts.yaml')
-
-
-
-def get_custom_knowledge(retriver, user_name, querry):
-    try:
-        collection_name = user_name
-        collection = Vector_DB(collection_name=user_name, force_create=False)
-        if collection.collection_exists:
-            data = collection.similarity_search(querry, k=2)
-            return data
-        else:
-            return None
-    except Exception as e:
-        print(e)
-        return None
-
-
-def chat_bot():
-    try:
-        llm = get_llm()
-        template = prompts['only_chat_with_custom_knowledge']
-        if template and llm:
-            prompt = PromptTemplate(
-                template=template,
-                input_variables=["custom_knowledge", "querry" , "history"],
-                # partial_variables={
-                #     "querry": parser.get_format_instructions(),
-                #     "category_list" : categories
-                #     },
-            )
-
-            chain = prompt | llm
-            return chain
-        else:
-            return None
-    except Exception as e:
-        print(e)
-        return None
-
-
-
-def summarize_messages(chain_input):
-    try:
-        stored_messages = chat_history.messages
-        if len(stored_messages) == 0:
-            return False
-        summarization_prompt = ChatPromptTemplate.from_messages(
-            [
-                MessagesPlaceholder(variable_name="chat_history"),
-                (
-                    "user",
-                    "Distill the above chat messages into a single summary message. Include as many specific details as you can.",
-                ),
-            ]
-        )
-        summarization_chain = summarization_prompt | chat
-        summary_message = summarization_chain.invoke({"chat_history": stored_messages})
-        chat_history.clear()
-        chat_history.add_message(summary_message)
-        return True
-    except Exception as e:
-        print(f"Error summarizing messages: {e} ")
-        return False
-
-
-
-
-def chat_bot_get(chain,  custom_knowledge,  querry):
-    try:
-        chat_history.add_user_message(querry)
-        x = chain.invoke(
-            {"custom_knowledge": custom_knowledge, "querry": querry , "history": chat_history.messages})
-        ai_response = [{"role": "assistant", "content": x.content}]
-        chat_history.add_ai_message(x.content)
-        summarize_messages(chat_history)
-        return True, x 
-    except Exception as e:
-        return False, str(e)
+response = invoke(graph, message_history, knowledge)
+print(response)

@@ -19,3 +19,5 @@ PyPDF2
 pyjwt
 faiss-cpu
 six
+langgraph
+wikipedia
