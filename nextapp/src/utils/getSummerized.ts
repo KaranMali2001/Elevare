@@ -12,7 +12,7 @@ export async function getSummerizedEmails(
   ids: string[],
   userEmailAddress: string,
 
-  accessToken: string,
+  accessToken: string
 ) {
   console.log("ids are in getSummerized EMails.ts file", ids);
   let formattedEmails: EmailFullFormat[] = [];
@@ -62,7 +62,7 @@ export async function getSummerizedEmails(
   const batch: batchOfEmailsReqBody[] = [];
   for (let i = 0; i < queue[0].length; i++) {
     const isSkipped = skippedMails.findIndex(
-      (mail) => mail.id === finalEmailFormat[i].mail_id,
+      (mail) => mail.id === finalEmailFormat[i].mail_id
     );
     if (isSkipped === -1) {
       batch.push(finalEmailFormat[i]);
@@ -87,7 +87,7 @@ export async function getSummerizedEmails(
   }
   let DashBoardEmails: DashBoardEmail[] = getDashBoardEmails(
     queue[0],
-    summaryMails,
+    summaryMails
   );
   let underProcessEmailIds: string[] = [];
   for (let i = 1; i < queue.length; i++) {
@@ -101,9 +101,10 @@ export async function getSummerizedEmails(
     DashBoardEmails,
     lastFetchDate,
     userEmailAddress,
-    underProcessEmailIds,
+    underProcessEmailIds
   );
   if (isStoredMails) queue.shift();
+
   return { DashBoardEmails, queue, skippedMails };
 }
 

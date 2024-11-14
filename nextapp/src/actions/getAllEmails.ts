@@ -17,7 +17,7 @@ export async function GetAllEmails(userEmailAddress?: string) {
     }
     userEmailAddress = DEFAULT_EMAIL;
   }
-  console.log("userEmail Address", userEmailAddress);
+
   const cookieStore = await cookies();
 
   let accessToken = cookieStore.get("Token")?.value || "";
@@ -27,7 +27,6 @@ export async function GetAllEmails(userEmailAddress?: string) {
   let fetchedByTime: boolean = false;
 
   if (Date.now() > Number(expiresAt)) {
-    console.log("refresh token in GetAllEmails");
     const res = await prisma.users.findFirst({
       where: {
         emailAddress: userEmailAddress || "",
@@ -53,8 +52,7 @@ export async function GetAllEmails(userEmailAddress?: string) {
       underProcessEmailIds: true,
     },
   });
-  console.log("accessToken", accessToken);
-  console.log("lastSummerized", lastSummarized);
+
   try {
     if (lastSummarized?.lastFetchdTimeStamp === null) {
       response = await fetch(
@@ -85,7 +83,7 @@ export async function GetAllEmails(userEmailAddress?: string) {
       throw new Error("error while fetching email from api");
     }
     const data = await response.json();
-    console.log("data", data);
+
     if (data?.resultSizeEstimate === 0)
       return NextResponse.json({
         data: [],
@@ -130,7 +128,7 @@ export async function GetAllEmails(userEmailAddress?: string) {
       console.log("LIMITS REACHED", finalIDs);
       throw new Error("LIMITS REACHED");
     }
-    console.log("before eget Summerzied");
+
     ids = ids.slice(0, finalIDs);
     response = await getSummerizedEmails(ids, userEmailAddress, accessToken);
 
@@ -144,7 +142,7 @@ export async function GetAllEmails(userEmailAddress?: string) {
       skippedMails: response.skippedMails,
     });
   } catch (e: any) {
-    console.log("error in catch i s", e);
+    console.error("error in catch i s", e);
     throw e;
   }
 }

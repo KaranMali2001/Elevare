@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Trash2Icon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
@@ -28,7 +28,8 @@ import { storeRealTimeEmails } from "@/utils/storeRealTimeEmails";
 import axios from "axios";
 import { getCookie, setCookie } from "cookies-next";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { DEFAULT_EMAIL } from "@/constants";
+import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import GenerateCustomizationOptions from "./GenerateCustomizationOptions";
@@ -38,7 +39,15 @@ import ModalWindowContainer from "./ModalWindowContainer";
 import Overlay from "./Overlay";
 import Skelton from "./Skelton";
 import SpinnerMini from "./SpinnerMini";
-import { DEFAULT_EMAIL } from "@/constants";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 export function EmailClientComponent({
   mails,
   queue,
@@ -59,9 +68,8 @@ export function EmailClientComponent({
   let userEmailAddress: string;
   const url = usePathname();
   const session = useSession();
-  console.log("url ", url);
+
   if (url.startsWith("/Demo")) {
-    console.log("inside if of url.startsWith");
     userEmailAddress = DEFAULT_EMAIL;
   } else {
     userEmailAddress = session.data?.user?.email || "";
@@ -71,7 +79,7 @@ export function EmailClientComponent({
   const [dbPageNumber, setdbPageNumber] = useRecoilState(dbPageNumberAtom);
   const [filter, setFilter] = useRecoilState(categoryfilter);
   const [isSideBarOpen, setIsSideBarOpen] = useRecoilState(sideBarOpen);
-
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   // useStates
   const [filteredMails, setFilteredMails] = useState<any[]>([]);
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
@@ -120,14 +128,13 @@ export function EmailClientComponent({
     async function filterQuery() {
       setIsFilteringMails(true);
       try {
-        console.log("filter ", filter);
         const res = await fetch("/api/filterQuery", {
           method: "POST",
           //@ts-ignore
           body: JSON.stringify({ filter: [...filter] }),
         });
         const res2 = await res.json();
-        console.log("res from filter query", res2);
+
         setFilteredMails((cur) => [...res2.res]);
         if (filter.has("Others")) {
         }
@@ -147,8 +154,7 @@ export function EmailClientComponent({
       setEmails((emails) => {
         const map = new Map<string, DashBoardEmail>();
         const temp = [];
-        console.log("mails", mails);
-        console.log("emails", emails);
+
         for (let i = 0; i < mails.length; i++) {
           map.set(mails[i].id, mails[i]);
         }
@@ -168,7 +174,30 @@ export function EmailClientComponent({
     const urlArr = window.location.href.split("/");
     if (urlArr[urlArr.length - 1] === "dashborad") setCurTab("Inbox");
   }, []); //provided empty dependancy array because we want this effect to run on only intial render
-
+  const handleDelete = async () => {
+    try {
+      console.log("currentEmail", currentEmail?.id);
+      const res = await axios.delete("/api/deleteEmail", {
+        data: {
+          id: currentEmail?.id || "",
+          userEmailAddress: userEmailAddress || "",
+        },
+      });
+      if (res.status === 200) {
+        toast.success("Mail Delete successfully", {
+          duration: 3000,
+          position: "top-center",
+        });
+        setDisplayMails((cur) =>
+          cur.filter((mail) => mail.id !== currentEmail?.id)
+        );
+      }
+    } catch (error) {
+      toast.error("Some error while deleting mail");
+    } finally {
+      setIsDeleteModalOpen(false);
+    }
+  };
   async function handleLoadMore(fromDB: boolean) {
     try {
       setIsLoadingMore(true);
@@ -363,13 +392,52 @@ export function EmailClientComponent({
                           </p>
                         </div>
                       </Link>
+                      <Dialog
+                        open={isDeleteModalOpen}
+                        onOpenChange={setIsDeleteModalOpen}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            variant={"ghost"}
+                            size={"icon"}
+                            className="absolute bottom-2 right-9 flex items-center justify-center rounded-full"
+                          >
+                            <Trash2Icon className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px] bg-white">
+                          <DialogHeader>
+                            <DialogTitle>Confirm Deletion</DialogTitle>
+                            <DialogDescription>
+                              Are you sure you want to delete this item? This
+                              action cannot be undone.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button
+                              variant="outline"
+                              onClick={() => setIsDeleteModalOpen(false)}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              onClick={handleDelete}
+                            >
+                              Delete
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="absolute bottom-2 right-2"
+                        className="absolute bottom-2 right-2 flex items-center justify-center rounded-full"
                         onClick={toggleQuickReply}
                       >
                         <ChevronRight className="h-4 w-4" />
+
                         <span className="sr-only">Quick reply</span>
                       </Button>
                     </CardContent>

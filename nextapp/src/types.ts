@@ -14,6 +14,12 @@ type Mail = {
   tone?: string;
   body?: string;
 };
+type Notifications = {
+  id: number;
+  title: string;
+  description: string;
+  isRead: boolean;
+};
 
 type DashBoardEmail = {
   id: string;

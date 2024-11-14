@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { uploadFile } from "@/actions/uploadFile";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,35 +10,34 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  FileIcon,
-  TrashIcon,
-  ExternalLinkIcon,
-  BarChartIcon,
-  ShieldIcon,
-  ClockIcon,
-  DatabaseIcon,
-  UploadIcon,
-  CreditCardIcon,
-  StarIcon,
-  CheckIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
-import { deleteFile } from "@/utils/deleteFile";
-import { uploadFile } from "@/actions/uploadFile";
-import { useSession } from "next-auth/react";
-import { listFolderContents } from "@/utils/listFolderContents";
-import { dateFormatter } from "@/utils/dateFormatter";
-import { PricingModalWindow } from "./pricing-modal";
-import { usePathname } from "next/navigation";
 import { DEFAULT_EMAIL } from "@/constants";
+import { useToast } from "@/hooks/use-toast";
+import { dateFormatter } from "@/utils/dateFormatter";
+import { deleteFile } from "@/utils/deleteFile";
+import { listFolderContents } from "@/utils/listFolderContents";
+import axios from "axios";
+import { motion } from "framer-motion";
+import {
+  BarChartIcon,
+  CheckIcon,
+  ClockIcon,
+  CreditCardIcon,
+  DatabaseIcon,
+  ExternalLinkIcon,
+  FileIcon,
+  ShieldIcon,
+  StarIcon,
+  TrashIcon,
+  UploadIcon,
+} from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { PricingModalWindow } from "./pricing-modal";
 
 type UploadedFile = {
   name: string;
@@ -149,7 +150,10 @@ export function EnhancedProfilePageComponent({ user }: any) {
       });
     }
   };
-
+  async function handleRevokeAccess() {
+    console.log("revoke access");
+    const res = await axios.get("/api/revokeAccess");
+  }
   return (
     <div className="container mx-auto p-4 overflow-auto">
       <Card className="max-w-4xl mx-auto">
@@ -214,20 +218,23 @@ export function EnhancedProfilePageComponent({ user }: any) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-sm font-medium flex items-center">
-                      <ClockIcon className="w-4 h-4 mr-2" />
-                      Data Retention
-                    </CardTitle>
+                    <Button onClick={handleRevokeAccess}>
+                      <CardTitle className="text-sm font-medium flex items-center">
+                        <ClockIcon className="w-4 h-4 mr-2" />
+                        Revoke Website Access
+                      </CardTitle>
+                    </Button>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      Your data is currently set to be retained for 3 months.
+                      Revoking access will stop this website from accessing your
+                      data. From this point on, new emails will not be
+                      summarized, while any previously processed data will not
+                      deleted
                     </p>
-                    <AnimatedButton className="mt-2" variant="outline">
-                      Adjust Retention Period
-                    </AnimatedButton>
                   </CardContent>
                 </Card>
+
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-sm font-medium flex items-center">

@@ -14,5 +14,4 @@ export default async function encrypt(data: string) {
   });
   //@ts-ignore
   return result.ciphertext?.toString("base64");
-  // return data;
 }

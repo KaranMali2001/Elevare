@@ -33,7 +33,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     async signIn({ user, account, profile }) {
       if (!account?.refresh_token) {
-        console.log("No refresh token provided", account?.refresh_token);
         return true; // Still allow sign in even without refresh token
       }
 

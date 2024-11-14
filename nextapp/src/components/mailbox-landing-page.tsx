@@ -212,14 +212,17 @@ export function MailboxLandingPageComponent() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
               >
-                <Image
-                  // src="/placeholder.svg?height=600&width=800"
-                  src="/heroImage.png"
-                  alt="Mailbox Interface"
-                  width={800}
+                <iframe
+                  width={1000}
                   height={600}
-                  className="w-full rounded-lg shadow-2xl"
-                />
+                  src="https://www.youtube.com/embed/O8h3CZVUVAY"
+                  title="elevare app Demo video"
+                  //@ts-ignore
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  //@ts-ignore
+                  allowFullScreen
+                ></iframe>
               </motion.div>
             </section>
             <div className="" id="Features">
