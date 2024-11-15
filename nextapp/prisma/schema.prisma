@@ -17,6 +17,7 @@ model Users {
   refreshToken         String
   lastFetchdTimeStamp  String?
   emailsCnt            Int?
+  revokedAccess        Boolean         @default(false)
   underProcessEmailIds String[]
   categories           String[]
   files                UserFiles[]
@@ -27,7 +28,7 @@ model Users {
 }
 
 model Emails {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
   emailId          String
   threadId         String?
   contentType      String?
@@ -37,7 +38,7 @@ model Emails {
   tone             String?
   cc               String?
   bcc              String?
-  date             String?
+  date             DateTime?
   from             String?
   subject          String?
   label            String[]

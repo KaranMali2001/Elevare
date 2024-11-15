@@ -36,7 +36,7 @@ export function HeaderNotificationIconComponent({
     <DropdownMenu open={isOpen} onOpenChange={handleOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
+          <Bell />
           <AnimatePresence>
             {unreadCount > 0 && (
               <motion.div

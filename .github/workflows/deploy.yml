@@ -1,42 +1,42 @@
-name: CI/CD Pipeline for Next.js and FastAPI
-on:
-  push:
-    branches:
-      - main # Run the workflow on push to the main branch
-  workflow_dispatch: # Allow manual triggering of the workflow
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      # Step 1: Check out the repository
-      - name: Checkout code
-        uses: actions/checkout@v2
+# name: CI/CD Pipeline for Next.js and FastAPI
+# on:
+#   push:
+#     branches:
+#       - main # Run the workflow on push to the main branch
+#   workflow_dispatch: # Allow manual triggering of the workflow
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       # Step 1: Check out the repository
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      # Step 2: SSH into the Vultr server and deploy the app
-      - name: Deploy to Vultr
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VULTR_IP }}
-          username: ${{ secrets.VULTR_USER }}
-          password: ${{ secrets.VULTR_PASSWORD }} # Use password instead of SSH key
-          script: |
-            echo "Starting deployment script..."
+#       # Step 2: SSH into the Vultr server and deploy the app
+#       - name: Deploy to Vultr
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.VULTR_IP }}
+#           username: ${{ secrets.VULTR_USER }}
+#           password: ${{ secrets.VULTR_PASSWORD }} # Use password instead of SSH key
+#           script: |
+#             echo "Starting deployment script..."
 
-            echo "Removing old folder"
-            rm -rf Elevare
+#             echo "Removing old folder"
+#             rm -rf Elevare
 
-            echo "Stopping old Docker containers"
-            docker stop $(docker ps -q)
+#             echo "Stopping old Docker containers"
+#             docker stop $(docker ps -q)
 
-            echo "Cleaning up old Docker images"
-            docker system prune -af
+#             echo "Cleaning up old Docker images"
+#             docker system prune -af
 
-            echo "Cloning new repo"
-            git clone https://github.com/KaranMali2001/Elevare.git
-            cp SensitiveEnv/.env.production ~/Elevare/nextapp/
-            cp SensitiveEnv/.env.production ~/Elevare/bg_tasks/
-            cp SensitiveEnv/.env ~/Elevare/LLM
+#             echo "Cloning new repo"
+#             git clone https://github.com/KaranMali2001/Elevare.git
+#             cp SensitiveEnv/.env.production ~/Elevare/nextapp/
+#             cp SensitiveEnv/.env.production ~/Elevare/bg_tasks/
+#             cp SensitiveEnv/.env ~/Elevare/LLM
 
-            cd Elevare
-            echo "Deploying to production"
-            docker compose up --build -d
+#             cd Elevare
+#             echo "Deploying to production"
+#             docker compose up --build -d

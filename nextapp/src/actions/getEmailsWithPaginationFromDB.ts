@@ -10,6 +10,7 @@ export async function getEmailsWithPaginationFromDB(
   liveFetchedEmailsCnt?: number
 ) {
   // Calculate how many items to skip
+  console.log("Started");
   const skip =
     (pageNumber - 1) * EMAIL_PER_PAGE_FROM_DB + (liveFetchedEmailsCnt || 0);
 
@@ -20,10 +21,10 @@ export async function getEmailsWithPaginationFromDB(
     skip: skip, // Skip already fetched items
     take: EMAIL_PER_PAGE_FROM_DB, // Limit to 10 emails per request
     orderBy: {
-      id: "desc", // Optional: order emails by mail's id
+      emailId: "desc", // Optional: order emails by mail's id
     },
   });
-  // console.log("searched emails", emails);
+  console.log("searched emails", emails);
   const dashBoardFormatEmails: DashBoardEmail[] = await Promise.all(
     emails.map(async (email) => {
       const decryptedLongSummary = await decrypt(email.longSummary || "");
@@ -33,7 +34,7 @@ export async function getEmailsWithPaginationFromDB(
         shortSummary: email.shortSummary || "",
         longSummary: decryptedLongSummary,
         tone: email.tone || "",
-        date: email.date || "",
+        date: new Date(email.date || "") || "",
         from: email.from || "",
         subject: email.subject || "",
         labels: email.label || "",

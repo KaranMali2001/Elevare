@@ -1,6 +1,6 @@
 export function getDashBoardEmails(
   fullFormatEmails: EmailFullFormat[],
-  summaryMails: batchOfEmailsResBody[],
+  summaryMails: batchOfEmailsResBody[]
 ) {
   let DashBoardEmails: DashBoardEmail[] = [];
   for (let i = 0; i < summaryMails.length; i++) {
@@ -11,7 +11,7 @@ export function getDashBoardEmails(
       shortSummary: summaryMails[i]?.short_summary,
       longSummary: summaryMails[i]?.summary,
       tone: summaryMails[i]?.tone,
-      date: fullFormatEmails[i]?.date,
+      date: new Date(fullFormatEmails[i]?.date || ""),
       from: fullFormatEmails[i]?.from,
       subject: fullFormatEmails[i]?.subject,
       labels: fullFormatEmails[i]?.labels,

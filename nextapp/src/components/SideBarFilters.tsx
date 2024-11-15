@@ -44,7 +44,7 @@ function SideBarFilters({
     <div className="space-y-2">
       {categories.map((category) => (
         <div
-          className="flex items-center gap-2 px-2 py-1 hover:bg-gray-50 transition-colors rounded-md"
+          className="flex items-center gap-4 p-2 hover:bg-gray-50 transition-colors rounded-md"
           key={category}
         >
           <input

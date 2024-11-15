@@ -15,6 +15,7 @@ export async function summerizeInRealTime(
     data = JSON.stringify(emails);
   }
   console.log("url is ", URL);
+  console.log("LLM input", data);
   try {
     const res = await fetch(URL, {
       method: "POST",

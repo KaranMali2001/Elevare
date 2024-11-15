@@ -4,7 +4,7 @@ type Mail = {
   labels: string[];
   textPlain: string;
   textHtml: string;
-  date: string;
+  date: Date;
   from: string;
   to: string;
   snippet: string;
@@ -28,7 +28,7 @@ type DashBoardEmail = {
   shortSummary: string;
   longSummary: string;
   tone: string;
-  date: string;
+  date: Date;
   from: string;
   subject: string;
   labels: string[];
@@ -68,7 +68,7 @@ type SkippedMail = {
   shortSummary: string;
   longSummary: string;
   tone: string;
-  date: string;
+  date: Date;
   from: string;
   subject: string;
   labels: string[];
@@ -101,7 +101,7 @@ type EmailFullFormat = {
   threadId: string;
   labels: string[];
   snippet: string;
-  date: string;
+  date: Date;
   from: string;
   to: string;
   subject: string;

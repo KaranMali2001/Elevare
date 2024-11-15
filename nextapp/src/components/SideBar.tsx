@@ -4,7 +4,7 @@ import { getGeneratedRes } from "@/actions/getGeneratedRes";
 import { sideBarOpen, tab } from "@/recoil/atom";
 import axios from "axios";
 import { getCookie } from "cookies-next";
-import { Pencil } from "lucide-react";
+import { Menu, Pencil } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { use, useEffect, useState, useTransition } from "react";
 import toast from "react-hot-toast";
@@ -21,11 +21,15 @@ import SideBarNavigation from "./SideBarNavigation";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { DEFAULT_EMAIL } from "@/constants";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import Link from "next/link";
 
 function SideBar({
+  isDemo,
   categories,
   mailCount,
 }: {
+  isDemo: boolean;
   categories: string[];
   mailCount: number;
 }) {
@@ -44,10 +48,10 @@ function SideBar({
   }
   //Compose form field states
   const [isLoading, setIsLoading] = useState(false);
+  const [isMobileScreen, SetIsMobileScreen] = useState(false);
   const [receiver, setReceiver] = useState("");
   const [prompt, setPrompt] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
-  const [viewPortWidth, setViewPortWidth] = useState<number>(0);
   const [generatedText, setGeneratedText] = useState<{
     subject: string;
     body: string;
@@ -73,6 +77,9 @@ function SideBar({
     handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  useEffect(() => {
+    if (window.innerWidth < 500) SetIsMobileScreen(true);
   }, []);
   useEffect(() => {
     if (isSideBarOpen) {
@@ -187,13 +194,88 @@ ${generatedText.body}
     setReceiver("");
     setIsComposeOpen(false);
   }
+  if (isMobileScreen) {
+    return (
+      <>
+        <Sheet open={isSideBarOpen} onOpenChange={setIsSideBarOpen}>
+          <SheetContent className="p-4 md:w-[25vw]" side="left">
+            <div
+              onClick={() => setIsSideBarOpen(false)}
+              className="flex flex-col h-[100vh] m-auto py-6"
+            >
+              <SideBarNavigation
+                isSideBarOpen={isSideBarOpen}
+                mailCount={mailCount}
+                setCurTab={setCurTab}
+              />
+              <div className="border-t flex flex-col border-gray-300 py-2 ">
+                <h3 className="font-semibold text-gray-700 text-base mb-3">
+                  Filters
+                </h3>
+                <SideBarFilters
+                  categories={categories}
+                  isLoading={isLoading}
+                  startTransition={startTransition}
+                  curTab={curTab}
+                  setCurTab={setCurTab}
+                />
+              </div>
+              <div className="mt-auto justif p-4">
+                <Button
+                  onClick={() => setIsComposeOpen(true)}
+                  className="bg-black text-white w-full flex items-center justify-center gap-2 py-2 rounded-md hover:bg-gray-900 transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <Pencil className="h-5 w-5" />
+                    {isSideBarOpen && <span>Compose</span>}
+                  </div>
+                </Button>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+        {isComposeOpen && (
+          <Overlay toggleModal={toggleModal} /> //overlay
+        )}
+        {isComposeOpen && (
+          <ModalWindowContainer>
+            <ModalHeader
+              handleModalClose={handleModalClose}
+              heading1={"Quick Send"}
+            />
+            <ModalBody>
+              <GenerateCustomizationOptions
+                setReqBody={setReqBody}
+                setIsEnabled={setIsEnabled}
+                handleSend={handleSend}
+                isLoading={isLoading}
+              />
+
+              <ComposeInputFields
+                setReceiver={setReceiver}
+                receiver={receiver}
+                isLoading={isLoading}
+                setGeneratedText={setGeneratedText}
+                generatedText={generatedText}
+                setPrompt={setPrompt}
+                prompt={prompt}
+                handleGenerateResponse={handleGenerateResponse}
+              />
+            </ModalBody>
+          </ModalWindowContainer>
+        )}
+      </>
+    );
+  }
 
   return (
     <>
       {isPending && <LoadingBar />}
       <div
         className={`${
-          isSideBarOpen ? " absolute top-0 left-0 h-[91vh] min-w-[30vw] z-10  md:static md:min-w-[20vw] xl:min-w-[15vw]" : "w-0 md:w-[7vw] xl:w-[4vw]"
+          isSideBarOpen
+            ? " absolute top-0 left-0 h-[91vh] min-w-[30vw] z-10  md:static md:min-w-[20vw] xl:min-w-[15vw]"
+            : "w-0 md:w-[7vw] xl:w-[4vw]"
         } border-r border-gray-200 transition-all duration-300 ease-in-out flex flex-col  bg-white shadow-md overflow-hidden`}
       >
         <SideBarNavigation

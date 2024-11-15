@@ -19,7 +19,7 @@ export async function storeRealTimeEmails(
         shortSummary: mail.shortSummary,
         longSummary: encryptedLongSummary,
         tone: mail.tone,
-        date: mail.date,
+        date: new Date(mail.date),
         from: mail.from,
         subject: mail.subject,
         label: mail.labels,

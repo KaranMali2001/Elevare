@@ -1,3 +1,4 @@
+import { DEFAULT_EMAIL } from "@/constants";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -5,7 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("search") || "";
 
-  const userEmailAddress = (await auth())?.user?.email;
+  const userEmailAddress = (await auth())?.user?.email || DEFAULT_EMAIL;
+  console.log("email", userEmailAddress);
   const res = await prisma.emails.findMany({
     where: {
       userEmailAddress: userEmailAddress || "",
@@ -13,7 +15,6 @@ export async function GET(req: NextRequest) {
         {
           subject: { contains: query, mode: "insensitive" },
         },
-        { date: { contains: query, mode: "insensitive" } },
         {
           shortSummary: { contains: query, mode: "insensitive" },
         },
@@ -23,6 +24,7 @@ export async function GET(req: NextRequest) {
       ],
     },
   });
+  console.log("res", res);
 
   return NextResponse.json({ res });
 }

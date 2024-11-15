@@ -20,7 +20,11 @@ async function layout({ children }: any) {
     <>
       <DashboardHeader />
       <div className="flex h-[91vh] relative overflow-hidden bg-[rgb(242,242,247)] ">
-        <SideBar categories={categories} mailCount={res?.emailsCnt || 0} />
+        <SideBar
+          isDemo={false}
+          categories={categories}
+          mailCount={res?.emailsCnt || 0}
+        />
         {children}
       </div>
     </>

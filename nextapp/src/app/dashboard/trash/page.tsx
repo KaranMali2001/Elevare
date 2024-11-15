@@ -83,7 +83,7 @@ function Page() {
                             </p>
                           </div>
                           <span className="text-xs text-gray-400 ">
-                            {dateFormatter(email.date)}
+                            {dateFormatter(email.date.toString())}
                           </span>
                         </div>
 

@@ -15,7 +15,7 @@ import { useQuery } from "@/hooks/useQuery";
 import { emailsAtom, sideBarOpen } from "@/recoil/atom";
 import { dateFormatter } from "@/utils/dateFormatter";
 import axios from "axios";
-import { Mail, Menu, RefreshCw, Search } from "lucide-react";
+import { Mail, Menu, MessageSquare, RefreshCw, Search } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,8 +44,6 @@ function DashboardHeader() {
       setSearchResults([]);
       return;
     }
-    // const filteredResults = emails.filter(
-
     setSearchResults(searchEmails);
   }, [emails, searchQuery, searchEmails]);
   const router = useRouter();
@@ -75,7 +73,7 @@ function DashboardHeader() {
   };
   console.log("path name is", pathName);
   return (
-    <header className="border-b sticky border-gray-300 h-[9vh]  top-0 z-30 flex justify-between items-center px-6 lg:px-8 py-2 bg-white text-gray-700">
+    <header className="border-b sticky border-gray-300 h-[9vh] w-[100vw]  top-0 z-30 flex justify-between items-center px-6 lg:px-8 py-2 bg-white text-gray-700">
       <div className="flex items-center ">
         <Button onClick={handleSideBarToggle} variant="ghost" size="icon">
           <Menu className="h-6 w-6" />
@@ -86,7 +84,7 @@ function DashboardHeader() {
           </div>
         </Link>
       </div>
-      <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 ">
+      <div className="flex-1 flex items-center justify-end gap-3 px-2 lg:ml-6 ">
         <div className="max-w-lg w-full lg:max-w-xl relative">
           <div className="relative flex gap-2 justify-center items-center">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -103,9 +101,19 @@ function DashboardHeader() {
               initialNotifications={notifications}
             />
             {pathName.split("/").at(-1) !== "chat" && (
-              <div onClick={hanndleChatClick}>
-                <ProfessionalMonochromeButtonsComponent />
-              </div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={hanndleChatClick}
+              >
+                <Button
+                  className="hidden sm:flex items-center space-x-2 h-8 px-3 bg-primary text-primary-foreground hover:bg-primary/90"
+                  size="sm"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  <span className="text-sm font-medium">Chat AI</span>
+                </Button>
+              </motion.div>
             )}
           </div>
           {searchResults.length > 0 && (
@@ -131,7 +139,7 @@ function DashboardHeader() {
                             : result.shortSummary}
                         </span>
                         <span className="text-xs text-gray-400 hover:text-white">
-                          {dateFormatter(result.date)}
+                          {dateFormatter(result.date.toString())}
                         </span>
                       </div>
                       <div className="text-sm block truncate">
@@ -146,76 +154,76 @@ function DashboardHeader() {
             </Card>
           )}
         </div>
-      </div>
-      <div className="flex gap-2">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          onHoverStart={() => setIsRefreshHovered(true)}
-          onHoverEnd={() => setIsRefreshHovered(false)}
-        >
-          <Button
-            variant="ghost"
-            size="icon"
-            className="mr-2 self-center bg-gray-200 flex justify-center rounded-md "
-            onClick={() => window.location.reload()}
+        <div className="flex gap-2">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            onHoverStart={() => setIsRefreshHovered(true)}
+            onHoverEnd={() => setIsRefreshHovered(false)}
           >
-            <motion.div
-              animate={{ rotate: isRefreshHovered ? 360 : 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            >
-              <RefreshCw className="h-7 w-7" />
-            </motion.div>
-            <span className="sr-only">Refresh</span>
-          </Button>
-        </motion.div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
-              className="rounded-full border-gray-300 hover:border-gray-400"
+              className="hidden sm:inline-flex"
+              onClick={() => window.location.reload()}
             >
-              <img
-                src={session.data?.user?.image || ""}
-                width={36}
-                height={36}
-                alt="Avatar"
-                className="rounded-full"
-                style={{ aspectRatio: "36/36", objectFit: "cover" }}
-              />
+              <motion.div
+                animate={{ rotate: isRefreshHovered ? 360 : 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                <RefreshCw className="h-5 w-5" />
+              </motion.div>
+              <span className="sr-only">Refresh</span>
             </Button>
-          </DropdownMenuTrigger>
+          </motion.div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full border-gray-300 hover:border-gray-400"
+              >
+                <img
+                  src={session.data?.user?.image || ""}
+                  width={36}
+                  height={36}
+                  alt="Avatar"
+                  className="rounded-full"
+                  style={{ aspectRatio: "36/36", objectFit: "cover" }}
+                />
+              </Button>
+            </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" className="w-48 shadow-xl">
-            <DropdownMenuLabel className="text-gray-600">
-              My Account
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator className="my-1" />
-            <Link
-              href={
-                pathName.startsWith("/Demo")
-                  ? "/Demo/profile"
-                  : "/dashboard/profile"
-              }
-            >
-              <DropdownMenuItem className="hover:bg-gray-100">
-                Profile
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator className="my-1 hover:bg-gray-100" />
-            <button
-              onClick={async () => {
-                await signOutAction();
-                await signOut();
-              }}
-              className="w-full"
-            >
-              <DropdownMenuItem className="hover:bg-gray-100">
-                Logout
-              </DropdownMenuItem>
-            </button>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            <DropdownMenuContent align="end" className="w-48 shadow-xl">
+              <DropdownMenuLabel className="text-gray-600">
+                My Account
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="my-1" />
+              <Link
+                href={
+                  pathName.startsWith("/Demo")
+                    ? "/Demo/profile"
+                    : "/dashboard/profile"
+                }
+              >
+                <DropdownMenuItem className="hover:bg-gray-100">
+                  Profile
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator className="my-1 hover:bg-gray-100" />
+              <button
+                onClick={async () => {
+                  await signOutAction();
+                  await signOut();
+                }}
+                className="w-full"
+              >
+                <DropdownMenuItem className="hover:bg-gray-100">
+                  Logout
+                </DropdownMenuItem>
+              </button>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

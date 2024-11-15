@@ -10,7 +10,7 @@ export const dbPageNumberAtom = atom<number>({
 });
 export const sideBarOpen = atom<boolean>({
   key: "sideBarOpen",
-  default: true,
+  default: false,
 });
 export const categoryfilter = atom<Set<string>>({
   key: "categoryFilter",
