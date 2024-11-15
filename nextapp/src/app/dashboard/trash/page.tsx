@@ -84,6 +84,7 @@ function Page() {
                           </div>
                           <span className="text-xs text-gray-400 ">
                             {dateFormatter(email.date.toString())}
+                            {email.date.toLocaleString()}
                           </span>
                         </div>
 

@@ -13,8 +13,9 @@ const nextConfig = {
 
   output: "standalone",
   compiler: {
-    removeConsole: false,
+    removeConsole: true,
   },
+  optimizeFonts: true,
 };
 
 export default nextConfig;

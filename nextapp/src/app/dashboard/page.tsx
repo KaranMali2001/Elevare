@@ -4,6 +4,7 @@ import { EmailClientComponent } from "@/components/email-client";
 
 import { auth } from "@/lib/auth";
 import { getDBMailCnt } from "@/lib/data-services";
+import prisma from "@/lib/db";
 import { getDashBoardMailsFromQueueElement } from "@/utils/getDashBoardMailsFromQueueElement";
 import { getOneEmailForOneThread } from "@/utils/getOneEmailForOneThread";
 import { storeRealTimeEmails } from "@/utils/storeRealTimeEmails";
@@ -15,12 +16,19 @@ export default async function Page() {
   const fullUrl = headersList.get("referer") || "";
   const [, pathname] =
     fullUrl.match(new RegExp(`https?:\/\/${domain}(.*)`)) || [];
-
-  const res = await GetAllEmails();
-  const categories = new Set(["security", "newsletter", "education", "others"]); //IMP we will fetch this from db
-
   const session = await auth();
   const userEmailAddress = session?.user?.email;
+
+  const res = await GetAllEmails();
+  const categories = new Set([
+    "Security",
+    "Personal",
+
+    "Finance",
+    "Marketing",
+    "Education",
+    "Customer Service",
+  ]); //IMP we will fetch this from db
 
   if (!res) return "Something went wrong";
 

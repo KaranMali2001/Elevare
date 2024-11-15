@@ -42,7 +42,7 @@ export async function getSummerizedEmails(
           shortSummary: "TOO LONG TO SUMMERIZE",
           longSummary: "TOO LONG TO SUMMERIZE",
           tone: "TOO LONG TO SUMMERIZE",
-          date: formattedEmails[i - 1].date,
+          date: new Date(formattedEmails[i - 1].date),
           from: formattedEmails[i - 1].from,
           subject: formattedEmails[i - 1].subject,
         });

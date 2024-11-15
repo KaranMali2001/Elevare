@@ -69,7 +69,7 @@ function TrashEmailPage({
                           </p>
                         </div>
                         <span className="text-xs text-gray-400 ">
-                          {dateFormatter(email.date)}
+                          {email.date.toLocaleString()}
                         </span>
                       </div>
 

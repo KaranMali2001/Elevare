@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bell } from "lucide-react";
+import { AlertCircle, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -35,8 +35,8 @@ export function HeaderNotificationIconComponent({
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell />
+        <Button variant="ghost" size="icon" className="relative scale-150">
+          <Bell size={100} />
           <AnimatePresence>
             {unreadCount > 0 && (
               <motion.div

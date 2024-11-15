@@ -67,11 +67,6 @@ function DashboardHeader() {
     getNotifications();
   }, []);
 
-  const handleRefresh = () => {
-    console.log("inside handleRfresh page");
-    window.location.reload();
-  };
-  console.log("path name is", pathName);
   return (
     <header className="border-b sticky border-gray-300 h-[9vh] w-[100vw]  top-0 z-30 flex justify-between items-center px-6 lg:px-8 py-2 bg-white text-gray-700">
       <div className="flex items-center ">
@@ -80,13 +75,13 @@ function DashboardHeader() {
         </Button>
         <Link href="/dashboard" className="flex items-center " prefetch={false}>
           <div className="">
-            <Image src="/image.svg" height={140} width={140} alt="Brand LOGO" />
+            <Image src="/image.svg" height={150} width={200} alt="Brand LOGO" />
           </div>
         </Link>
       </div>
-      <div className="flex-1 flex items-center justify-end gap-3 px-2 lg:ml-6 ">
+      <div className="flex-1 flex items-center justify-end gap-6 px-2 lg:ml-6 ">
         <div className="max-w-lg w-full lg:max-w-xl relative">
-          <div className="relative flex gap-2 justify-center items-center">
+          <div className="relative flex gap-5 justify-center items-center">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </div>
@@ -107,7 +102,7 @@ function DashboardHeader() {
                 onClick={hanndleChatClick}
               >
                 <Button
-                  className="hidden sm:flex items-center space-x-2 h-8 px-3 bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="hidden sm:flex items-center space-x-2 py-5 h-8 px-3 bg-primary text-primary-foreground hover:bg-primary/90"
                   size="sm"
                 >
                   <MessageSquare className="h-4 w-4" />
@@ -154,25 +149,23 @@ function DashboardHeader() {
             </Card>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 ">
           <motion.div
-            whileHover={{ scale: 1.05 }}
+            // whileHover={{ scale: 1.05 }}
             onHoverStart={() => setIsRefreshHovered(true)}
             onHoverEnd={() => setIsRefreshHovered(false)}
           >
             <Button
-              variant="ghost"
-              size="icon"
-              className="hidden sm:inline-flex"
+              className=" sm:flex items-center space-x-2 px-5 py-1 bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={() => window.location.reload()}
             >
               <motion.div
                 animate={{ rotate: isRefreshHovered ? 360 : 0 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
               >
-                <RefreshCw className="h-5 w-5" />
+                <RefreshCw className=" w-5" />
               </motion.div>
-              <span className="sr-only">Refresh</span>
+              {/* <span className="sr-only">Refresh Mails</span> */}
             </Button>
           </motion.div>
           <DropdownMenu>

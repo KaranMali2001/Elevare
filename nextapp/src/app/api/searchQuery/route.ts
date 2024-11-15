@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
         {
           subject: { contains: query, mode: "insensitive" },
         },
+
         {
           shortSummary: { contains: query, mode: "insensitive" },
         },
@@ -24,7 +25,6 @@ export async function GET(req: NextRequest) {
       ],
     },
   });
-  console.log("res", res);
 
   return NextResponse.json({ res });
 }

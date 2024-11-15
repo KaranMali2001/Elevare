@@ -15,7 +15,7 @@ export async function worker(ids, emailAddress, accessToken) {
       emailId: temp.id,
       threadId: temp.threadId,
       contentType: temp.contentType,
-      date: temp.date,
+      date: new Date(temp.date),
       sentiment: "",
       userEmailAddress: emailAddress,
       label: temp.labelIds,

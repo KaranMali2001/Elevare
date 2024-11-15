@@ -3,7 +3,7 @@ import prisma from "@/lib/db";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function POST() {
   const session = await auth();
   const user = await prisma.users.findFirst({
     where: {
@@ -49,5 +49,13 @@ export async function GET() {
       console.log("revoke access success refresh token");
     }
   }
+  await prisma.users.update({
+    where: {
+      emailAddress: session?.user?.email || "",
+    },
+    data: {
+      revokedAccess: true,
+    },
+  });
   return NextResponse.json({ message: "Access will be Revoked", status: 200 });
 }

@@ -1,6 +1,5 @@
 "use server";
 import { EMAIL_PER_PAGE_FROM_DB } from "@/constants";
-import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import decrypt from "@/utils/decrypt";
 
@@ -34,7 +33,8 @@ export async function getEmailsWithPaginationFromDB(
         shortSummary: email.shortSummary || "",
         longSummary: decryptedLongSummary,
         tone: email.tone || "",
-        date: new Date(email.date || "") || "",
+        date: new Date(email.date || ""),
+
         from: email.from || "",
         subject: email.subject || "",
         labels: email.label || "",

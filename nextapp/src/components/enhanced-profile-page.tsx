@@ -38,6 +38,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PricingModalWindow } from "./pricing-modal";
+import { RevokeEmailAccess } from "./revoke-email-access";
+import { DataExportComponent } from "./data-export";
+import { DataDeletionComponent } from "./data-deletion-component";
 
 type UploadedFile = {
   name: string;
@@ -216,24 +219,7 @@ export function EnhancedProfilePageComponent({ user }: any) {
             <TabsContent value="data-management" className="space-y-4">
               <h3 className="text-lg font-semibold">Data Management</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader>
-                    <Button onClick={handleRevokeAccess}>
-                      <CardTitle className="text-sm font-medium flex items-center">
-                        <ClockIcon className="w-4 h-4 mr-2" />
-                        Revoke Website Access
-                      </CardTitle>
-                    </Button>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Revoking access will stop this website from accessing your
-                      data. From this point on, new emails will not be
-                      summarized, while any previously processed data will not
-                      deleted
-                    </p>
-                  </CardContent>
-                </Card>
+                <RevokeEmailAccess />
 
                 <Card>
                   <CardHeader>
@@ -254,38 +240,8 @@ export function EnhancedProfilePageComponent({ user }: any) {
                     </div>
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm font-medium flex items-center">
-                      <ShieldIcon className="w-4 h-4 mr-2" />
-                      Data Protection
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Your data is encrypted and protected.
-                    </p>
-                    <AnimatedButton className="mt-2" variant="outline">
-                      View Security Details
-                    </AnimatedButton>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm font-medium flex items-center">
-                      <FileIcon className="w-4 h-4 mr-2" />
-                      Export Data
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Download a copy of your data anytime.
-                    </p>
-                    <AnimatedButton className="mt-2" variant="outline">
-                      Request Data Export
-                    </AnimatedButton>
-                  </CardContent>
-                </Card>
+                <DataDeletionComponent />
+                <DataExportComponent />
               </div>
             </TabsContent>
             <TabsContent value="subscription" className="space-y-4">

@@ -12,7 +12,7 @@ export default async function encrypt(data: string) {
   //   name,
   //   plaintext: Buffer.from(data),
   // });
-  //@ts-ignore
+  // //@ts-ignore
   // return result.ciphertext?.toString("base64");
   return data;
 }

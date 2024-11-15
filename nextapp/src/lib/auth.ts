@@ -53,9 +53,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             categories: [
               "Security",
               "Personal",
+
+              "Finance",
+              "Marketing",
               "Education",
-              "Others",
-              "Promotional",
+              "Customer Service",
             ],
             lastFetchdTimeStamp: null,
             joinedDate: new Date(),

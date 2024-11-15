@@ -8,8 +8,24 @@ import "server-only";
 import { refreshAccessToken } from "./refreshAccessToken";
 
 export async function GetAllEmails(userEmailAddress?: string) {
+  const session = await auth();
+  const revokedAccess = await prisma.users.findFirst({
+    where: {
+      emailAddress: session?.user?.email || "",
+    },
+    select: {
+      revokedAccess: true,
+    },
+  });
+  if (revokedAccess?.revokedAccess) {
+    //add notification
+    return NextResponse.json({
+      data: [],
+      queue: [],
+      skippedMails: [],
+    });
+  }
   if (userEmailAddress === undefined) {
-    const session = await auth();
     userEmailAddress = session?.user?.email || "";
   } else {
     if (userEmailAddress !== DEFAULT_EMAIL) {

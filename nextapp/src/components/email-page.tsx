@@ -22,6 +22,7 @@ export function EmailPage({ mail }: { mail: EmailFullFormat }) {
         // const response = await fetch(`/api/emailFullFormat?id=${id}`);
         const res = {
           ...mail,
+
           shortSummary: dashBoardEmail?.shortSummary,
           longSummary: dashBoardEmail?.longSummary,
           tone: dashBoardEmail?.tone,

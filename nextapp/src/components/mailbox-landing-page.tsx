@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
+import VideoPlayer from "./videoPlayer";
 
 const ThemeContext = createContext({
   isDarkMode: false,
@@ -212,17 +213,20 @@ export function MailboxLandingPageComponent() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
               >
-                <iframe
-                  width={1000}
-                  height={600}
-                  src="https://www.youtube.com/embed/O8h3CZVUVAY"
-                  title="elevare app Demo video"
-                  //@ts-ignore
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  //@ts-ignore
-                  allowFullScreen
-                ></iframe>
+                {/* <video
+                  width="1200"
+                  height="800"
+                  controls
+                  preload="none"
+                  className="bg-purple-500"
+                >
+                  <source src="https://www.youtube.com/watch?v=O8h3CZVUVAY" />
+                  Karan
+                </video> */}
+                <VideoPlayer
+                  videoUrl="https://www.youtube.com/watch?v=O8h3CZVUVAY"
+                  autoPlay={true}
+                />
               </motion.div>
             </section>
             <div className="" id="Features">

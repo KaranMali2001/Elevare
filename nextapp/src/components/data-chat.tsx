@@ -191,7 +191,6 @@ export function DataChat() {
                       value={prompt}
                       onChange={(e) => setPrompt(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      disabled={isStreaming}
                     />
                     <Button
                       size="icon"
@@ -254,7 +253,6 @@ export function DataChat() {
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    disabled={isStreaming}
                   />
                   <Button
                     size="icon"
