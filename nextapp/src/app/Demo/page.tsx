@@ -16,11 +16,8 @@ export default async function Page() {
     fullUrl.match(new RegExp(`https?:\/\/${domain}(.*)`)) || [];
   console.log("pathname is", pathname);
   const userEmailAddress = "elevareapphelp@gmail.com";
-  const res = await GetAllEmails(userEmailAddress);
-  const categories = new Set(["security", "newsletter", "education", "others"]); //IMP we will fetch this from db
-
-  if (!res) return "Something went wrong";
-
+  let isLimitReached = false;
+  let res;
   let {
     data,
     queue,
@@ -29,7 +26,20 @@ export default async function Page() {
     data: DashBoardEmail[];
     queue: EmailFullFormat[][];
     skippedMails: SkippedMail[];
-  } = await res.json();
+  } = { data: [], queue: [], skippedMails: [] };
+
+  try {
+    res = await GetAllEmails();
+    let temp = await res.json();
+    data = temp.data;
+    queue = temp.queue;
+    skippedMails = temp.skippedMails;
+  } catch (e: any) {
+    if (e.message !== "LIMITS REACHED") throw e;
+    else isLimitReached = true;
+  }
+  const categories = new Set(["security", "newsletter", "education", "others"]); //IMP we will fetch this from db
+
   console.log("res is ", res);
   let firstTimeFetched = true;
   let dbMailCnt: number = await getDBMailCnt(userEmailAddress || "");
@@ -78,6 +88,7 @@ export default async function Page() {
   console.log("data is ", data);
   return (
     <EmailClientComponent
+      isLimitReached={isLimitReached}
       mails={data}
       queue={queue}
       dbMailCnt={dbMailCnt}
