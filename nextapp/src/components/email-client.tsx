@@ -49,6 +49,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 export function EmailClientComponent({
+  isLimitReached,
   mails,
   queue,
   dbMailCnt,
@@ -57,6 +58,7 @@ export function EmailClientComponent({
   threadIdSet,
   categories,
 }: {
+  isLimitReached: boolean;
   mails: DashBoardEmail[];
   queue: EmailFullFormat[][];
   dbMailCnt: number;
@@ -118,6 +120,10 @@ export function EmailClientComponent({
       getAccesToken();
     }
     setInitialLoad(false);
+    if (isLimitReached)
+      toast.error(
+        "Your daily limit is reached You will not be able to see new mails"
+      );
   }, []);
   useEffect(() => {
     if (filter.size === 0) {
@@ -321,8 +327,9 @@ export function EmailClientComponent({
         if (response) {
           setGeneratedText(response);
         }
-      } catch (e) {
-        throw e;
+      } catch (e: any) {
+        if (e.message.startsWith("Daily generated count "))
+          toast.error("You Have reached daily genrate limit");
       }
     });
   }

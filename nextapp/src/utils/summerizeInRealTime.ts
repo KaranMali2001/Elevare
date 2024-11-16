@@ -20,14 +20,8 @@ export async function summerizeInRealTime(
     emails: emails.emails,
     categories: categories,
   };
-  if (emails.emails.length === 1) {
-    // URL = `${process.env.LLM_URL}/api/post/mail`;
-    URL = `${process.env.LLM_URL}api/post/summury/mail`;
-    data = JSON.stringify(LLMReqObject);
-  } else {
-    URL = `${process.env.LLM_URL}api/post/summury/batch_of_mails`;
-    data = JSON.stringify(LLMReqObject);
-  }
+  URL = `${process.env.LLM_URL}api/post/summury/batch_of_mails`;
+  data = JSON.stringify(LLMReqObject);
   console.log("url is ", URL);
   console.log("LLM input", data);
   try {

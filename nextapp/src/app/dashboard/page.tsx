@@ -4,7 +4,6 @@ import { EmailClientComponent } from "@/components/email-client";
 
 import { auth } from "@/lib/auth";
 import { getDBMailCnt } from "@/lib/data-services";
-import prisma from "@/lib/db";
 import { getDashBoardMailsFromQueueElement } from "@/utils/getDashBoardMailsFromQueueElement";
 import { getOneEmailForOneThread } from "@/utils/getOneEmailForOneThread";
 import { storeRealTimeEmails } from "@/utils/storeRealTimeEmails";
@@ -18,8 +17,28 @@ export default async function Page() {
     fullUrl.match(new RegExp(`https?:\/\/${domain}(.*)`)) || [];
   const session = await auth();
   const userEmailAddress = session?.user?.email;
+  let isLimitReached = false;
+  let res;
+  let {
+    data,
+    queue,
+    skippedMails,
+  }: {
+    data: DashBoardEmail[];
+    queue: EmailFullFormat[][];
+    skippedMails: SkippedMail[];
+  } = { data: [], queue: [], skippedMails: [] };
 
-  const res = await GetAllEmails();
+  try {
+    res = await GetAllEmails();
+    let temp = await res.json();
+    data = temp.data;
+    queue = temp.queue;
+    skippedMails = temp.skippedMails;
+  } catch (e: any) {
+    if (e.message !== "LIMITS REACHED") throw e;
+    else isLimitReached = true;
+  }
   const categories = new Set([
     "Security",
     "Personal",
@@ -29,18 +48,6 @@ export default async function Page() {
     "Education",
     "Customer Service",
   ]); //IMP we will fetch this from db
-
-  if (!res) return "Something went wrong";
-
-  let {
-    data,
-    queue,
-    skippedMails,
-  }: {
-    data: DashBoardEmail[];
-    queue: EmailFullFormat[][];
-    skippedMails: SkippedMail[];
-  } = await res.json();
 
   let firstTimeFetched = true;
   let dbMailCnt: number = await getDBMailCnt(userEmailAddress || "");
@@ -87,6 +94,7 @@ export default async function Page() {
 
   return (
     <EmailClientComponent
+      isLimitReached={isLimitReached}
       mails={data}
       queue={queue}
       dbMailCnt={dbMailCnt}

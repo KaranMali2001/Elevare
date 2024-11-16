@@ -89,8 +89,9 @@ const IdPageGenerateNav = ({
             return { ...cur, prompt: "" };
           });
         }
-      } catch (e) {
-        throw e;
+      } catch (e: any) {
+        if (e.message.startsWith("Daily generated count "))
+          toast.error("You Have reached daily genrate limit");
       }
     });
   }

@@ -115,8 +115,9 @@ function SideBar({
         setGeneratedText(response);
         // setPrompt("");
       }
-    } catch (e) {
-      throw e;
+    } catch (e: any) {
+      if (e.message.startsWith("Daily generated count "))
+        toast.error("You Have reached daily genrate limit");
     } finally {
       setIsLoading(false);
     }

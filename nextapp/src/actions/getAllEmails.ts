@@ -134,19 +134,22 @@ export async function GetAllEmails(userEmailAddress?: string) {
       },
     });
     let finalIDs: number = ids.length;
-    if (!count) finalIDs = ids.length;
     const dailySummeryCount = count?.dailySummeryCount || 0;
     if (dailySummeryCount + ids.length >= SUMMERY_LIMIT) {
       finalIDs = SUMMERY_LIMIT - dailySummeryCount;
     }
-
-    if (finalIDs === 0 && ids.length > 0) {
+    if (finalIDs <= 0) {
       console.log("LIMITS REACHED", finalIDs);
       throw new Error("LIMITS REACHED");
     }
-
-    ids = ids.slice(0, finalIDs);
-    response = await getSummerizedEmails(ids, userEmailAddress, accessToken);
+    let i = finalIDs >= ids.length ? ids.length : ids.length - finalIDs;
+    let newIds = [];
+    if (i < ids.length)
+      for (; i < ids.length; i++) {
+        newIds.push(ids[i]);
+      }
+    else newIds = ids;
+    response = await getSummerizedEmails(newIds, userEmailAddress, accessToken);
 
     if (!response) {
       throw new Error("empty respose in getAll email file");
