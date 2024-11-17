@@ -57,7 +57,7 @@ export async function worker(ids, emailAddress, accessToken) {
             "Skipped mail",
             finalEmailFormat[i - 1].subject,
             "token cnt",
-            curCnt
+            curCnt,
           );
           skippedMails.push({
             emailId: formattedEmails[i - 1].id,
@@ -87,7 +87,7 @@ export async function worker(ids, emailAddress, accessToken) {
       console.log(
         `Batch contains ${temp.length} mails with`,
         "total tokens cnt",
-        cnt
+        cnt,
       );
       const batch = [];
       let tempj = j;
@@ -121,6 +121,7 @@ export async function worker(ids, emailAddress, accessToken) {
 
           if (temp) {
             const encryptedLongSummary = await encrypt(summaryMails[k].summary);
+            console.log("encrypted long summary", encryptedLongSummary);
             temp.longSummary = encryptedLongSummary;
             temp.shortSummary = summaryMails[k].short_summary;
 
@@ -137,52 +138,6 @@ export async function worker(ids, emailAddress, accessToken) {
   } finally {
     return { ReturnArray, skippedMails };
   }
-  // for (let i = 0; i < queue.length; i++) {
-  //   const batch = [];
-  //   for (let j = 0; j < queue[i].length; j++) {
-  //     const id = queue[i][j].id;
-  //     const isSkipped = skippedMails.find((mail) => mail.id === id);
-  //     if (!isSkipped){
-  //       const temp = finalEmailFormat.find(mail => mail.mail_id === id);
-  //       batch.push(temp);
-  //     }
-  //     else {
-  //       const temp = ReturnArray.find((mail) => mail.id === isSkipped.id);
-  //       temp.summary = "Too long to summerize";
-  //       temp.long_summary = "Too long to summerize";
-  //     }
-
-  //     console.log("batch", batch);
-  //     const summaryMails = await summerizeInRealTime(batch);
-  //     if(summaryMails.constructor !== Array){
-  //       const temp = ReturnArray.find(
-  //           (mail) => mail.emailID == summaryMails.mail_id
-  //         );
-  //         if (temp) {
-  //           temp.long_summary = summaryMails.summary;
-  //           temp.summary = summaryMails.short_summary;
-  //           temp.toneOfEmail = summaryMails.tone;
-  //         }
-  //     }
-  //     else{
-  //     for (let i = 0; i < summaryMails?.length || 0; i++) {
-  //       const temp = ReturnArray.find(
-  //         (mail) => mail.emailID == summaryMails[i].mail_id
-  //       );
-
-  //       if (temp) {
-  //         temp.long_summary = summaryMails[i].summary;
-  //         temp.summary = summaryMails[i].short_summary;
-  //         temp.toneOfEmail = summaryMails[i].tone;
-  //       }
-  //     }
-  //   }
-  //   }
-
-  //   // ReturnArray.push(summaryMails);
-  // }
-  // console.log("return array", ReturnArray);
-  // return ReturnArray;
 }
 
 function removeEscapeSequence(text) {

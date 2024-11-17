@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("search") || "";
 
   const userEmailAddress = (await auth())?.user?.email || DEFAULT_EMAIL;
-  console.log("email", userEmailAddress);
+
   const res = await prisma.emails.findMany({
     where: {
       userEmailAddress: userEmailAddress || "",

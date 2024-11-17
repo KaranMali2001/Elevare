@@ -15,6 +15,7 @@ import { useQuery } from "@/hooks/useQuery";
 import { emailsAtom, sideBarOpen } from "@/recoil/atom";
 import { dateFormatter } from "@/utils/dateFormatter";
 import axios from "axios";
+import { motion } from "framer-motion";
 import { Mail, Menu, MessageSquare, RefreshCw, Search } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -22,10 +23,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { HeaderNotificationIconComponent } from "./header-notification-icon";
-import { ProfessionalMonochromeButtonsComponent } from "./professional-monochrome-buttons";
+import { NotificationSystemComponent } from "./notification-system";
 import { Card } from "./ui/card";
-import { motion } from "framer-motion";
 
 function DashboardHeader() {
   const session = useSession();
@@ -92,9 +91,11 @@ function DashboardHeader() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <HeaderNotificationIconComponent
+            {/* <HeaderNotificationIconComponent
               initialNotifications={notifications}
-            />
+            /> */}
+            <NotificationSystemComponent initialNotifications={notifications} />
+
             {pathName.split("/").at(-1) !== "chat" && (
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -129,7 +130,7 @@ function DashboardHeader() {
                           {result?.shortSummary?.length > SEARCH_TEXT_LEN
                             ? result?.shortSummary.substring(
                                 0,
-                                SEARCH_TEXT_LEN
+                                SEARCH_TEXT_LEN,
                               ) + "..."
                             : result.shortSummary}
                         </span>

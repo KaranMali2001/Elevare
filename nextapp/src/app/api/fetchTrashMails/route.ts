@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
 
     const pageToken = data.nextPageToken || "";
     const ids = data.messages.map(
-      (cur: { id: string; threadId: string }) => cur.id
+      (cur: { id: string; threadId: string }) => cur.id,
     );
     let formattedEmails: EmailFullFormat[] = [];
     for (let i = 0; i < ids.length; i++) {

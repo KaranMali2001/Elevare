@@ -16,5 +16,3 @@ const auth = new GoogleAuth({
   },
 });
 export const kmsClient = new KeyManagementServiceClient({ auth });
-
-

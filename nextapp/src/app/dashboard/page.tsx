@@ -57,7 +57,7 @@ export default async function Page() {
     if (queue.length == 0) {
       let emailFromDB: DashBoardEmail[] = await getEmailsWithPaginationFromDB(
         1,
-        userEmailAddress || ""
+        userEmailAddress || "",
       );
 
       data = getOneEmailForOneThread(emailFromDB, threadIdSet);
@@ -67,7 +67,7 @@ export default async function Page() {
       let mailsFromQueue: DashBoardEmail[] =
         await getDashBoardMailsFromQueueElement(
           queue[0],
-          userEmailAddress || ""
+          userEmailAddress || "",
         );
       data = [...mailsFromQueue]; //IMP
 
@@ -81,7 +81,7 @@ export default async function Page() {
         data,
         undefined,
         userEmailAddress || "",
-        underProcessEmailIds
+        underProcessEmailIds,
       );
       data = getOneEmailForOneThread(mailsFromQueue, threadIdSet);
       if (res) queue.shift();

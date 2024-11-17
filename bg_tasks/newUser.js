@@ -9,7 +9,7 @@ export async function handleFirstTimeUser(emailAddress, accessToken) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
     const data = await response.json();
     // console.log("data is ", data);

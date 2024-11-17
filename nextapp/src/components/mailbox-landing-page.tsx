@@ -146,7 +146,7 @@ export function MailboxLandingPageComponent() {
                       >
                         {item}
                       </Link>
-                    )
+                    ),
                   )}
                 </nav>
               </div>

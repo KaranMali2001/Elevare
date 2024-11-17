@@ -139,7 +139,7 @@ export function EmailAnalyticsDashboard({
                           key={`cell-${index}`}
                           fill={COLORS[index % COLORS.length]}
                         />
-                      )
+                      ),
                     )}
                   </Pie>
                   <Tooltip />

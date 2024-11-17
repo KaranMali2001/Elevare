@@ -6,7 +6,7 @@ export async function storeRealTimeEmails(
   mails: DashBoardEmail[],
   lastFetchDate: string | undefined,
   userEmailAddress: string,
-  underProcessEmailIds: string[]
+  underProcessEmailIds: string[],
 ) {
   const dbMails = await Promise.all(
     mails.map(async (mail) => {
@@ -27,7 +27,7 @@ export async function storeRealTimeEmails(
         sentiment: mail.sentiment,
         userEmailAddress: userEmailAddress,
       };
-    })
+    }),
   );
 
   try {

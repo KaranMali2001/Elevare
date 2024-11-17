@@ -2,7 +2,7 @@ import { s3 } from "@/lib/awsSDK";
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 export async function listFolderContents(
-  emailAddress: string | null | undefined
+  emailAddress: string | null | undefined,
 ) {
   const params = {
     Bucket: "custom-knowledge", // Replace with your bucket name
@@ -17,7 +17,7 @@ export async function listFolderContents(
     if (data.Contents) {
       console.log(
         "Files in folder:",
-        data.Contents.map((item) => item.Key)
+        data.Contents.map((item) => item.Key),
       );
       return data.Contents.map((item) => item.Key); // Return list of file keys
     } else {

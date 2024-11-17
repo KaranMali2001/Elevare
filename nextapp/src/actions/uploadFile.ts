@@ -4,7 +4,7 @@ import { ObjectCannedACL, PutObjectCommand } from "@aws-sdk/client-s3";
 export async function uploadFile(
   file: any,
   emailAddress: string | undefined | null,
-  url: string
+  url: string,
 ) {
   if (file.type !== "application/pdf") {
     throw new Error("Please upload .pdf files");

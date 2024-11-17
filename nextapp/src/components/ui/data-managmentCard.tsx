@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 export function DataManagmentCard({
   cardTitle,
   cardDescription,
@@ -45,6 +46,7 @@ export function DataManagmentCard({
     const res = await axios.post(url);
     // Implement the actual revoke access logic here
     console.log("Email access revoked");
+    toast.success("Email access revoked");
     setIsDialogOpen(false);
   };
 

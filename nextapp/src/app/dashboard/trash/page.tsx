@@ -21,9 +21,8 @@ function Page() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [nextPageMailsToken, setNextPageMailsToken] =
     useRecoilState(trashNextPageToken);
-  console.log("send Mails", displayMails);
+
   useEffect(() => {
-    console.log("Hello");
     async function getTrashMails() {
       startTransition(async () => {
         if (displayMails.length == 0 && nextPageMailsToken === "InitialState") {

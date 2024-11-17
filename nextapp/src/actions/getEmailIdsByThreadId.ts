@@ -22,7 +22,7 @@ export default async function getEmailIdsByThreadId(threadId: string) {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     if (!response.ok) {
       const errorData = await response.json();

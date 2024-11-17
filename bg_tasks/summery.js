@@ -2,17 +2,23 @@ export async function summerizeInRealTime(emails, emailAddress) {
   let data;
   let URL;
   // console.log('emails to llm',emails)
-  if (emails.length === 1) {
-    URL = `${process.env.LLM_URL}api/post/summury/mail`;
-    data = JSON.stringify(emails.at(0));
-  } else {
-    URL = `${process.env.LLM_URL}api/post/summury/batch_of_mails`;
-    data = JSON.stringify(emails);
-  }
-  // console.log("Input to LLM", data);
-  // console.log("Input to LLM without stringgify", emails);
+  const categories = [
+    "Security",
+    "Personal",
 
-  // const data = JSON.stringify(emails);
+    "Finance",
+    "Marketing",
+    "Education",
+    "Customer Service",
+  ];
+  const LLMReqObject = {
+    username: emailAddress,
+    emails: emails.emails,
+    categories: categories,
+  };
+
+  URL = `${process.env.LLM_URL}api/post/summury/batch_of_mails`;
+  data = JSON.stringify(LLMReqObject);
 
   try {
     console.log("hello form su");
@@ -26,7 +32,7 @@ export async function summerizeInRealTime(emails, emailAddress) {
     if (!res.ok) {
       console.log("LLM", await res.json());
       throw new Error(
-        "error from LLM to generate response:" + (await res.json())
+        "error from LLM to generate response:" + (await res.json()),
       );
     }
     const summaryMails = await res.json();

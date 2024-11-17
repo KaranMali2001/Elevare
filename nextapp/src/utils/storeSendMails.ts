@@ -32,7 +32,6 @@ export async function storeSendMail(replyEmail: ReplyEmailDBFormat) {
         totalSent: { increment: 1 },
       },
     });
-    console.log("res from update sent mails is", res2);
   } catch (error: any) {
     throw error;
   }

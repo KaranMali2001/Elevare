@@ -79,7 +79,7 @@ export function EnhancedProfilePageComponent({ user }: any) {
     getFolderContent();
   }, [emailAddress]);
   const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setIsUploading(true);
     const file = event.target.files?.[0];

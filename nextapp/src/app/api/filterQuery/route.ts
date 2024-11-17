@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const filter = body.filter;
   const session = await auth();
-  console.log("filter are", filter);
+
   let res: any = [];
   if (filter.includes("Others")) {
     const cat = await prisma.users.findUnique({
@@ -36,9 +36,8 @@ export async function POST(req: NextRequest) {
           userEmailAddress: session?.user?.email || "",
           category: filter[i].toLowerCase(),
         },
-      })
+      }),
     );
-    //  console.log("res om sode for", filter[i].toLowerCase(), res);
   }
   res = res.flat();
   for (let i = 0; i < res.length; i++) {

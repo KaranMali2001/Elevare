@@ -4,12 +4,12 @@ import "server-only";
 export async function emailFullFormat(
   id: string,
   accessToken: string,
-  requestFrom?: string
+  requestFrom?: string,
 ) {
   if (!accessToken || !id) {
     return NextResponse.json(
       { error: "Access token and email ID are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
   try {
@@ -19,7 +19,7 @@ export async function emailFullFormat(
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
 
     if (!response.ok) {

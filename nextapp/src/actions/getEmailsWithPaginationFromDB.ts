@@ -6,7 +6,7 @@ import decrypt from "@/utils/decrypt";
 export async function getEmailsWithPaginationFromDB(
   pageNumber: number,
   userEmailAddress: string,
-  liveFetchedEmailsCnt?: number
+  liveFetchedEmailsCnt?: number,
 ) {
   // Calculate how many items to skip
   console.log("Started");
@@ -23,7 +23,7 @@ export async function getEmailsWithPaginationFromDB(
       emailId: "desc", // Optional: order emails by mail's id
     },
   });
-  console.log("searched emails", emails);
+
   const dashBoardFormatEmails: DashBoardEmail[] = await Promise.all(
     emails.map(async (email) => {
       const decryptedLongSummary = await decrypt(email.longSummary || "");
@@ -40,7 +40,7 @@ export async function getEmailsWithPaginationFromDB(
         labels: email.label || "",
         category: email.category?.toLowerCase() || "",
       };
-    })
+    }),
   );
   return dashBoardFormatEmails;
 }

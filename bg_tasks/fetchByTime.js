@@ -7,7 +7,7 @@ export async function FetchByTime(email, accessToken, timestamp) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
     const data = await response.json();
     if (data.resultSizeEstimate === 0) {

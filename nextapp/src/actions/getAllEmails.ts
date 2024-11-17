@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import "server-only";
 import { refreshAccessToken } from "./refreshAccessToken";
+import axios from "axios";
 
 export async function GetAllEmails(userEmailAddress?: string) {
   const session = await auth();
@@ -17,8 +18,14 @@ export async function GetAllEmails(userEmailAddress?: string) {
       revokedAccess: true,
     },
   });
+
   if (revokedAccess?.revokedAccess) {
-    //add notification
+    await axios.post("http://localhost:3000/api/pushNotification", {
+      title: "Revoked Access ",
+      description: `You have revoked Elevare's access to your account.
+        please log in again and restore access`,
+      userEmailAddress: session?.user?.email || "",
+    });
     return NextResponse.json({
       data: [],
       queue: [],

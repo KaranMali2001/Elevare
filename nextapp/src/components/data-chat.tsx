@@ -35,7 +35,7 @@ export function DataChat() {
   const [id, setId] = React.useState(
     () =>
       Math.random().toString(36).substring(2, 15) +
-      Math.random().toString(36).substring(2, 15)
+      Math.random().toString(36).substring(2, 15),
   );
   // Simulate streaming text from backend
   const streamResponse = async (userMessage: string) => {
@@ -65,15 +65,15 @@ export function DataChat() {
         prev.map((msg) =>
           msg.id === messageId
             ? { ...msg, content: response.slice(0, i + 1) }
-            : msg
-        )
+            : msg,
+        ),
       );
     }
 
     setMessages((prev) =>
       prev.map((msg) =>
-        msg.id === messageId ? { ...msg, complete: true } : msg
-      )
+        msg.id === messageId ? { ...msg, complete: true } : msg,
+      ),
     );
     setIsStreaming(false);
   };
@@ -218,7 +218,7 @@ export function DataChat() {
                     transition={{ delay: i * 0.1 }}
                     className={cn(
                       "flex w-full",
-                      message.role === "user" ? "justify-end" : "justify-start"
+                      message.role === "user" ? "justify-end" : "justify-start",
                     )}
                   >
                     <div
@@ -226,7 +226,7 @@ export function DataChat() {
                         "rounded-2xl px-4 py-2.5 max-w-[80%] text-base leading-relaxed shadow-sm",
                         message.role === "user"
                           ? "bg-primary text-primary-foreground"
-                          : "bg-muted/50 border border-muted-foreground/10"
+                          : "bg-muted/50 border border-muted-foreground/10",
                       )}
                     >
                       {message.content}

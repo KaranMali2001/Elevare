@@ -22,8 +22,7 @@ export async function summerizeInRealTime(
   };
   URL = `${process.env.LLM_URL}api/post/summury/batch_of_mails`;
   data = JSON.stringify(LLMReqObject);
-  console.log("url is ", URL);
-  console.log("LLM input", data);
+
   try {
     const res = await fetch(URL, {
       method: "POST",

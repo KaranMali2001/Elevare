@@ -40,6 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         await prisma.users.upsert({
           where: { emailAddress: user.email || "" },
           update: {
+            revokedAccess: false,
             refreshToken: account.refresh_token,
           },
           create: {

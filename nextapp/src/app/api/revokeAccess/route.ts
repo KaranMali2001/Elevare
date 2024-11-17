@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
+import axios from "axios";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -57,5 +58,16 @@ export async function POST() {
       revokedAccess: true,
     },
   });
+  console.log("revoked access sucesful");
+  const response = await axios.post(
+    "http://localhost:3000/api/pushNotification",
+    {
+      title: "Revoked Access",
+      description: `You have revoked Elevare's access to your account. To resume fetching new emails, 
+        please log in again and restore access`,
+      userEmailAddress: session?.user?.email || "",
+    }
+  );
+
   return NextResponse.json({ message: "Access will be Revoked", status: 200 });
 }

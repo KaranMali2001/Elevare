@@ -78,7 +78,7 @@ export function DataDeletionComponent() {
                         variant={"outline"}
                         className={cn(
                           "w-[240px] justify-start text-left font-normal",
-                          !startDate && "text-muted-foreground"
+                          !startDate && "text-muted-foreground",
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -104,7 +104,7 @@ export function DataDeletionComponent() {
                         variant={"outline"}
                         className={cn(
                           "w-[240px] justify-start text-left font-normal",
-                          !endDate && "text-muted-foreground"
+                          !endDate && "text-muted-foreground",
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />

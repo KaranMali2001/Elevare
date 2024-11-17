@@ -2,7 +2,7 @@ import { MailboxLandingPageComponent } from "@/components/mailbox-landing-page";
 
 export default async function Page() {
   const request = await fetch(
-    `https://ipinfo.io/json?token=${process.env.IP_INFO_TOKEN}`
+    `https://ipinfo.io/json?token=${process.env.IP_INFO_TOKEN}`,
   );
   const jsonResponse = await request.json();
 

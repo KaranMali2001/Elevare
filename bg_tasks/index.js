@@ -4,32 +4,11 @@ import { worker } from "./worker.js";
 import { FetchByTime } from "./fetchByTime.js";
 import { handleFirstTimeUser } from "./newUser.js";
 import { refreshAccessToken } from "./refreshAccessToken.js";
-import nodemailer from "nodemailer";
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_USERNAME,
-    pass: process.env.GMAIL_PASSWORD,
-  },
-});
-const sendErrorEmail = async (e) => {
-  const mailOptions = {
-    from: process.env.GMAIL_USERNAME,
-    to: [
-      "rohit2khairmode2024@gmail.com",
-      "karansignup5599@gmail.com",
-      "chinmaypisal45@gmail.com",
-    ],
-    subject: "Error in background tasks",
-    text: `Error in background tasks ${e}`,
-  };
-  await transporter.sendMail(mailOptions);
-};
-
+import "dotenv/config";
 console.log("background tasks started");
 
 const prisma = new PrismaClient();
-console.log("Prisma client created", prisma);
+
 async function main() {
   let ids;
   const Users = await prisma.users.findMany({
@@ -40,9 +19,9 @@ async function main() {
       underProcessEmailIds: true,
     },
   });
+
   //   console.log("Users", Users);
   if (Users.length === 0) {
-    console.log("all users not found");
     return;
   }
 
@@ -54,7 +33,6 @@ async function main() {
 
     const accessToken = await refreshAccessToken(Users[i].refreshToken);
     if (accessToken === "") {
-      console.log("access token not found");
       continue;
     }
     if (!Users[i].lastFetchdTimeStamp) {
@@ -74,26 +52,23 @@ async function main() {
       const { ReturnArray, skippedMails } = await worker(
         ids,
         Users[i].emailAddress,
-        accessToken
+        accessToken,
       );
       // console.log("Return array", ReturnArray[0].label);
       if (ReturnArray.length === 0) {
-        console.log("return array not found");
         continue;
       }
       if (skippedMails.length === 0) {
-        console.log("we don't have skipped mail");
       }
       let temp = [];
       let returnArrayInd = 0;
       let skippedInd = 0;
-      console.log("ids", ids.length);
+
       for (let i = 0; i < ids.length; i++) {
         if (
           skippedInd < skippedMails.length &&
           ids[i] == skippedMails[skippedInd].emailId
         ) {
-          console.log("ids[i]", ids[i]);
           temp.push(skippedMails[skippedInd]);
           skippedInd++;
         } else if (
@@ -111,14 +86,13 @@ async function main() {
 
       try {
         temp = temp.slice(1);
-        console.log("temp", temp);
+
         temp = temp.reverse();
 
         if (temp.length !== 0) {
-          console.log("temp.length", temp.length);
           await prisma.$transaction(async (primsa) => {
             const dbResponse = await prisma.emails.createMany({ data: temp });
-            console.log("db response", dbResponse);
+
             const summeryEmails = await prisma.analytics.upsert({
               where: {
                 userEmailAddress: Users[i].emailAddress,
@@ -137,11 +111,7 @@ async function main() {
                 dailySentCount: 0,
               },
             });
-            console.log(
-              "createMany response & summery emails are",
-              dbResponse,
-              summeryEmails
-            );
+
             let emailCnt = await prisma.users.findFirst({
               where: {
                 emailAddress: Users[i].emailAddress,
@@ -163,7 +133,6 @@ async function main() {
                 underProcessEmailIds: [],
               },
             });
-            console.log("lastFetchUpdated", dbResponse2);
           });
         }
       } catch (error) {
@@ -180,16 +149,18 @@ async function main() {
 import cron from "node-cron";
 
 import { resetLimits } from "./ResetLimit/reset.js";
+import { sendErrorEmail } from "./sendEmail.js";
 cron.schedule("0 0 * * *", async () => {
   try {
     console.log("trying to reset limit");
     await resetLimits();
+    await sendErrorEmail("LIMIT SUCCESSFULY RESET");
   } catch (error) {
     await sendErrorEmail(error);
   }
 });
 cron.schedule("*/30 * * * *", async () => {
-  console.log("running a task every 30 minutes", Date.now());
+  console.log("running a task every 30 minutes", Date.now().toString());
   try {
     await main();
   } catch (error) {
@@ -198,4 +169,4 @@ cron.schedule("*/30 * * * *", async () => {
   console.log("task done");
 });
 
-// await main();
+await main();

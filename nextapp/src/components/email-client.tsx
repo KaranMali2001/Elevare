@@ -195,7 +195,7 @@ export function EmailClientComponent({
           position: "top-center",
         });
         setDisplayMails((cur) =>
-          cur.filter((mail) => mail.id !== currentEmail?.id)
+          cur.filter((mail) => mail.id !== currentEmail?.id),
         );
       }
     } catch (error) {
@@ -220,7 +220,7 @@ export function EmailClientComponent({
           dashBoardEmail,
           undefined,
           userEmailAddress,
-          underProcessEmailIds
+          underProcessEmailIds,
         );
         if (res) {
           queue.shift();
@@ -234,12 +234,12 @@ export function EmailClientComponent({
           emailFromDB = await getEmailsWithPaginationFromDB(
             dbPageNumber,
             userEmailAddress,
-            mails.length //here we only need intial mails cnt to skip over therefore instead of emails state we are using mails
+            mails.length, //here we only need intial mails cnt to skip over therefore instead of emails state we are using mails
           );
         } else {
           emailFromDB = await getEmailsWithPaginationFromDB(
             dbPageNumber,
-            userEmailAddress
+            userEmailAddress,
           ); //if we does not fetched single new mail then this block will run
         }
 

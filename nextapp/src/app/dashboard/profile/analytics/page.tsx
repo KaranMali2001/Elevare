@@ -56,7 +56,7 @@ export default async function Page() {
 
     const allCategories = categories.flatMap((item) => item.category);
     const uniqueCategory = allCategories.filter(
-      (item, index) => allCategories.indexOf(item) === index
+      (item, index) => allCategories.indexOf(item) === index,
     );
 
     await Promise.all(
@@ -67,7 +67,7 @@ export default async function Page() {
           },
         });
         categoryData.push({ name: category!, value: res });
-      })
+      }),
     );
   }
 
@@ -245,7 +245,7 @@ export default async function Page() {
     else if (hour >= 20 && hour < 24) timeSlot = "20-24";
 
     const dayData: any = emailActivityHeatmap.find(
-      (day: any) => day.name === dayName
+      (day: any) => day.name === dayName,
     );
     if (dayData) {
       dayData[timeSlot] += 1;

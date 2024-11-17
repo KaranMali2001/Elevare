@@ -1,27 +1,36 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Menu, RefreshCw, Search, MessageSquare, User, Settings, BarChart, LogOut } from 'lucide-react'
-import Link from "next/link"
-import { motion } from "framer-motion"
-import Image from 'next/image'
+import { useState } from "react";
+import {
+  Menu,
+  RefreshCw,
+  Search,
+  MessageSquare,
+  User,
+  Settings,
+  BarChart,
+  LogOut,
+} from "lucide-react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 export function Navbar() {
-  const [isSearchFocused, setIsSearchFocused] = useState(false)
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [isRefreshHovered, setIsRefreshHovered] = useState(false)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isRefreshHovered, setIsRefreshHovered] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -35,55 +44,73 @@ export function Navbar() {
           </SheetTrigger>
           <SheetContent side="left" className="w-[240px] lg:w-[300px]">
             <nav className="grid gap-4 py-4">
-              <Link href="/" className="text-lg font-medium hover:text-primary transition-colors">
+              <Link
+                href="/"
+                className="text-lg font-medium hover:text-primary transition-colors"
+              >
                 Dashboard
               </Link>
-              <Link href="/inbox" className="text-lg font-medium hover:text-primary transition-colors">
+              <Link
+                href="/inbox"
+                className="text-lg font-medium hover:text-primary transition-colors"
+              >
                 Inbox
               </Link>
-              <Link href="/projects" className="text-lg font-medium hover:text-primary transition-colors">
+              <Link
+                href="/projects"
+                className="text-lg font-medium hover:text-primary transition-colors"
+              >
                 Projects
               </Link>
             </nav>
           </SheetContent>
         </Sheet>
-        
+
         <div className="mr-4 flex flex-1 items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <div className="flex items-center gap-2">
-              <Image 
-                src="/pixelcut-export_(2)_upscaled.jpeg" 
-                alt="Elevare Logo" 
-                width={120} 
-                height={30} 
+              <Image
+                src="/pixelcut-export_(2)_upscaled.jpeg"
+                alt="Elevare Logo"
+                width={120}
+                height={30}
                 className="object-contain"
               />
             </div>
           </Link>
           <nav className="hidden lg:flex space-x-4">
-            <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="/"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Dashboard
             </Link>
-            <Link href="/inbox" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="/inbox"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Inbox
             </Link>
-            <Link href="/projects" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="/projects"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Projects
             </Link>
           </nav>
         </div>
-        
+
         <div className="flex items-center justify-end space-x-4">
           {isSearchOpen ? (
-            <motion.div 
+            <motion.div
               className="relative w-full max-w-sm"
               initial={{ width: 40 }}
               animate={{ width: 200 }}
               transition={{ duration: 0.3 }}
             >
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Search conversations" 
+              <Input
+                placeholder="Search conversations"
                 className="pl-8 pr-4 py-2 w-full transition-all duration-300 focus:ring-2 focus:ring-primary"
                 onBlur={() => setIsSearchOpen(false)}
                 autoFocus
@@ -100,14 +127,14 @@ export function Navbar() {
               <span className="sr-only">Open search</span>
             </Button>
           )}
-          <motion.div 
+          <motion.div
             className="relative hidden lg:block w-full max-w-sm"
             animate={{ width: isSearchFocused ? 300 : 200 }}
             transition={{ duration: 0.3 }}
           >
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search conversations" 
+            <Input
+              placeholder="Search conversations"
               className="pl-8 transition-all duration-300 focus:ring-2 focus:ring-primary"
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
@@ -133,11 +160,8 @@ export function Navbar() {
               <span className="sr-only">Refresh</span>
             </Button>
           </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button 
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
               className="flex items-center space-x-2 h-8 px-3 bg-primary text-primary-foreground hover:bg-primary/90"
               size="sm"
             >
@@ -190,5 +214,5 @@ export function Navbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }

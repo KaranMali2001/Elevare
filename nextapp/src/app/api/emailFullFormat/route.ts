@@ -9,6 +9,6 @@ export const GET = async (req: NextRequest) => {
   const accessToken = cookieStore.get("Token")?.value;
 
   const email = await emailFullFormat(emailID || "", accessToken || "");
-  console.log("log before returning");
+
   return NextResponse.json({ res: email });
 };

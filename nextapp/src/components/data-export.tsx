@@ -46,12 +46,7 @@ export function DataExportComponent() {
         return prevProgress + 10;
       });
     }, 200);
-    const axiosConfig = {
-      responseType: "arraybuffer",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+
     const res = await axios.post(
       "/api/exportData",
       {
@@ -66,10 +61,6 @@ export function DataExportComponent() {
         },
       }
     );
-    setFileFromApi(() => {
-      console.log("res", res.data);
-      return res;
-    });
 
     clearInterval(intervalId);
     setProgress(100);

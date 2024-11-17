@@ -7,14 +7,12 @@ import encrypt from "@/utils/encrypt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  // console.log("THreaad sumariztion started", request);
   const {
     latestNonSentEmailID,
     threadId,
     url,
   }: { latestNonSentEmailID: string; threadId: string; url: string } =
     await request.json();
-  console.log("latestNonSentEmailID ", latestNonSentEmailID);
   let userEmailAddress: string;
   //first check in db that thread summery exist or not
   if (url.startsWith("/Demo")) {
@@ -35,7 +33,7 @@ export async function POST(request: NextRequest) {
         from: true,
       },
     });
-    console.log("latestEmailSummery is ", latestEmailSummery);
+
     const longSummary = await decrypt(latestEmailSummery?.longSummary || "");
     const isThreadId = await prisma.threads.findFirst({
       where: {
@@ -43,7 +41,6 @@ export async function POST(request: NextRequest) {
         userEmailAddress: userEmailAddress,
       },
     });
-    console.log("isThreadID", isThreadId);
     if (!isThreadId) {
       console.log("inside thread");
       const res = await prisma.threads.create({
@@ -56,15 +53,10 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      console.log(
-        "res from creating first thread id into therad model is",
-        res
-      );
       return NextResponse.json(longSummary);
     }
     const threadSummary = await decrypt(isThreadId?.threadSummery || "");
     if (isThreadId?.latestThreadMailId === latestNonSentEmailID) {
-      console.log("from db");
       return NextResponse.json(threadSummary);
     }
 
@@ -76,7 +68,7 @@ export async function POST(request: NextRequest) {
         latest_body: longSummary || "",
       },
     };
-    console.log("threaObject", JSON.stringify(threadReqObject));
+
     const res = await fetch(`${process.env.LLM_URL}api/post/summury/thread`, {
       method: "POST",
       body: JSON.stringify(threadReqObject),
@@ -86,12 +78,12 @@ export async function POST(request: NextRequest) {
     });
 
     const data = await res.json();
-    console.log("data i s", data);
+
     if (!data.thread_summary) {
       throw new Error("No thread summary found from LLM API");
     }
     const encryptedData = await encrypt(
-      data.thread_summary || data.thread_summery
+      data.thread_summary || data.thread_summery,
     );
     const response = await prisma.threads.update({
       where: {

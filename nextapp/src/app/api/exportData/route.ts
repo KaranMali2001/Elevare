@@ -4,6 +4,9 @@ import prisma from "@/lib/db";
 import PDFDocument from "pdfkit";
 import { NextRequest, NextResponse } from "next/server";
 import { PassThrough } from "stream";
+import { uploadFile } from "@/actions/uploadFile";
+import { ObjectCannedACL, PutObjectCommand } from "@aws-sdk/client-s3";
+import { s3 } from "@/lib/awsSDK";
 
 export async function POST(req: NextRequest) {
   const { startDate, endDate } = await req.json();
@@ -21,7 +24,7 @@ export async function POST(req: NextRequest) {
       },
     },
   });
-  console.log("before pdf");
+
   const pdfStream = new PassThrough();
 
   const pdfDoc = new PDFDocument({
@@ -80,11 +83,23 @@ export async function POST(req: NextRequest) {
   });
 
   pdfDoc.end();
+  const params = {
+    Bucket: "custom-knowledge", // Replace with your Vultr bucket name
+    Key: `${email}/${Date.now().toLocaleString("en-IN")}.pdf`, // The key (or name) of the file in the bucket
+    Body: pdfStream, // The file content
+    ContentType: "pdf", // Set the content type
+    ACL: ObjectCannedACL.public_read, // Make the file publicly accessible
+  };
+  const url = "https://blr1.vultrobjects.com/exportData";
+  try {
+    console.log("file url is ", url);
+    const command = new PutObjectCommand(params);
+    const data = await s3.send(command);
+    console.log("File uploaded successfully:", data);
+  } catch (error) {
+    console.error("Error uploading file:", error);
+  }
   return NextResponse.json(pdfStream, {
     status: 200,
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=exported_data.pdf",
-    },
   });
 }

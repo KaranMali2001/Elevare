@@ -8,25 +8,23 @@ export async function DELETE(request: NextRequest) {
   const { id, userEmailAddress, date } = await request.json();
   if (!date) {
   }
-  // if (!id.startsWith("6")) {
-  //   console.log("inside delete", id);
-  //   const res2 = await prisma.emails.findFirst({
-  //     where: {
-  //       userEmailAddress: userEmailAddress,
-  //       emailId: id,
-  //     },
-  //     select: {
-  //       id: true,
-  //     },
-  //   });
-  //   console.log("res2 is", res2);
-  //   const res = await prisma.emails.delete({
-  //     where: {
-  //       userEmailAddress: userEmailAddress,
-  //       id: res2?.id,
-  //     },
-  //   });
-  // }
+
+  const email = await prisma.emails.findFirst({
+    where: {
+      userEmailAddress: userEmailAddress,
+      id: id,
+    },
+    select: {
+      emailId: true,
+    },
+  });
+  const res2 = await prisma.replyMails.deleteMany({
+    where: {
+      userEmailAddress: userEmailAddress,
+      idOfOriginalMail: email?.emailId,
+    },
+  });
+
   const res = await prisma.emails.delete({
     where: {
       userEmailAddress: userEmailAddress,

@@ -11,7 +11,7 @@ async function emailFullFormat(id, accessToken) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -64,7 +64,7 @@ async function emailFullFormat(id, accessToken) {
 
     if (email.textPlain !== "")
       email.textPlain = Buffer.from(email.textPlain, "base64").toString(
-        "utf-8"
+        "utf-8",
       );
     else if (email.textHtml !== "")
       email.textHtml = Buffer.from(email.textHtml, "base64").toString("utf-8");
