@@ -10,4 +10,9 @@ export async function resetLimits() {
       dailySummeryCount: 0,
     },
   });
+  await prisma.notifications.deleteMany({
+    where: {
+      isRead: true,
+    },
+  });
 }

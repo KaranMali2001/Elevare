@@ -23,7 +23,7 @@ export async function GetAllEmails(userEmailAddress?: string) {
     await axios.post("http://localhost:3000/api/pushNotification", {
       title: "Revoked Access ",
       description: `You have revoked Elevare's access to your account.
-        please log in again and restore access`,
+        We cant Fetch any real time emails , You have to sign in again to access full service of elevare`,
       userEmailAddress: session?.user?.email || "",
     });
     return NextResponse.json({

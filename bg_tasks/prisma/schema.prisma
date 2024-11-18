@@ -9,22 +9,22 @@ datasource db {
 }
 
 model Users {
-  id                   String          @id @map("_id")
-  emailAddress         String          @unique
+  id                   String      @id @map("_id")
+  emailAddress         String      @unique
   emails               Emails[]
   profileUrl           String
   userName             String
   refreshToken         String
   lastFetchdTimeStamp  String?
   emailsCnt            Int?
-  revokedAccess        Boolean         @default(false)
+  revokedAccess        Boolean     @default(false)
   underProcessEmailIds String[]
   categories           String[]
   files                UserFiles[]
   analytics            Analytics[]
   Threads              Threads[]
-  Notifications        Notifications[]
-  joinedDate           DateTime        @default(now())
+
+  joinedDate DateTime @default(now())
 }
 
 model Emails {
@@ -98,7 +98,6 @@ model Notifications {
   isRead           Boolean
   userEmailAddress String
   date             DateTime @default(now())
-  users            Users    @relation(fields: [userEmailAddress], references: [emailAddress])
 }
 
 //add new label model and add to analytics
