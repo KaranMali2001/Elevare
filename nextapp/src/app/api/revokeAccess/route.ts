@@ -68,6 +68,17 @@ export async function POST() {
       userEmailAddress: session?.user?.email || "",
     }
   );
+  // console.log("Executing work Flow");
+  // const workRes = await axios.post(
+  //   "http://localhost:8080/api/v1/executions/webhook/elevare/revokeMailInfo/4wjtkzwVGBM9yKnjm3yv8r",
+  //   { userEmailaddress: session?.user?.email || "" }
+  // );
+  // console.log("worker Res", workRes);
+
+  axios.post(
+    "http://localhost:8080/api/v1/executions/webhook/elevare/revokeMailInfo/4wjtkzwVGBM9yKnjm3yv8r",
+    { userEmailaddress: session?.user?.email || "" }
+  );
 
   return NextResponse.json({ message: "Access will be Revoked", status: 200 });
 }

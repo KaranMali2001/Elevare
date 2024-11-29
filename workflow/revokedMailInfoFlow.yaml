@@ -1,0 +1,157 @@
+id: revokeMailInfo
+namespace: elevare
+description: This Workflow will run when ever user revoke their email access from elevare
+labels:
+  author: Rohit Khairmode
+tasks:
+  - id: hello
+    type: io.kestra.plugin.scripts.node.Script
+    beforeCommands:
+      - npm install nodemailer
+
+    script: |
+      const nodemailer = require('nodemailer');
+      const transporter = nodemailer.createTransport({
+        service: 'gmail', // Use your email provider here
+        auth: {
+          user: 'elevareapphelp@gmail.com', // Your email address
+          pass: '{{ secret('ELEVARE_HELP_PASS')}}', // Your email password (or App Password if using Gmail)
+        },
+      });
+      const mailOptions = {
+        from: 'elevareapphelp@gmail.com', // Sender address
+        to: '{{trigger.body.userEmailaddress}}', // List of recipients
+        subject: 'Revoked Email Access From Elevare', // Subject line
+        text: 'This is a plain-text email sent from Node.js.', // Plain-text body
+        html: `<!DOCTYPE html>
+              <html lang="en">
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                  body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                    color: #333;
+                    line-height: 1.6;
+                  }
+                  .email-container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background: #ffffff;
+                    border: 1px solid #dddddd;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                  }
+                  .email-header {
+                    background-color: #0056b3;
+                    color: #ffffff;
+                    padding: 20px;
+                    text-align: center;
+                  }
+                  .email-header h1 {
+                    margin: 0;
+                    font-size: 24px;
+                  }
+                  .email-body {
+                    padding: 20px;
+                  }
+                  .email-body h2 {
+                    margin-top: 0;
+                    color: #0056b3;
+                  }
+                  .email-body p {
+                    margin: 10px 0;
+                  }
+                  .email-body a {
+                    color: #0056b3;
+                    text-decoration: none;
+                  }
+                  .email-footer {
+                    background-color: #f4f4f4;
+                    color: #666;
+                    font-size: 12px;
+                    text-align: center;
+                    padding: 10px;
+                  }
+                  .email-footer a {
+                    color: #0056b3;
+                    text-decoration: none;
+                  }
+                  .button {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #0056b3;
+                    color: #ffffff !important;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    margin-top: 20px;
+                  }
+                  .button:hover {
+                    background-color: #004494;
+                  }
+                  li{
+                    color: #f00;
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="email-container">
+                  <!-- Email Header -->
+                  <div class="email-header">
+                    <h1>Access Revoked</h1>
+                  </div>
+                  <!-- Email Body -->
+                  <div class="email-body">
+                    <h2>Dear User,</h2>
+                    <p>
+                      We noticed that you've revoked our access to your email account. This means we can no longer summarize your new emails or provide email management services via our platform.
+                    </p>
+                    <p>
+                      If this was unintentional, you can restore access by re-authorizing your account on our website. Click the button below to log in and re-enable access.
+                    </p>
+                    <a href="https://elevareapp.com/login" class="button">Re-Authorize Access</a>
+                    <p>
+                      Please note that without access to your email, you will not be able to:
+                    </p>
+                    <ul>
+                      <li>Receive new email summaries.</li>
+                      <li>Use/Send AI-generated responses.</li>
+                      <li>Your chatbot wil not have new emails context.</li>
+                      <li>Your Email analytics will also stop.</li>
+                    </ul>
+                    <p>
+                      If you have any questions or need assistance, feel free to contact our support team by replying to this mail.
+                    </p>
+                    <p>Thank you for using our service!</p>
+                    <p>Best regards,</p>
+                    <p><strong>The Elevare Team</strong></p>
+                  </div>
+                  <!-- Email Footer -->
+                  <div class="email-footer">
+                    <p>
+                      &copy; 2024 Elevare. All rights reserved.  
+                      <br>
+                      <a href="https://elevareapp.com/privacy-policy">Privacy Policy</a>
+                    </p>
+                  </div>
+                </div>
+              </body>
+              </html>
+      `, // HTML body
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log('Error occurred:', error);
+        } else {
+          console.log('Email sent:', info.response);
+        }
+      });
+triggers:
+  - id: webhook
+    type: io.kestra.plugin.core.trigger.Webhook
+    key: 4wjtkzwVGBM9yKnjm3yv8r
