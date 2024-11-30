@@ -2,7 +2,7 @@ id: revokeMailInfo
 namespace: elevare
 description: This Workflow will run when ever user revoke their email access from elevare
 labels:
-  author: Rohit Khairmode
+  author: Rohit Khairmode & karan mali
 tasks:
   - id: hello
     type: io.kestra.plugin.scripts.node.Script
