@@ -7,7 +7,7 @@ export default async function Page() {
   const jsonResponse = await request.json();
 
   console.log("hello", jsonResponse.ip, jsonResponse.country);
-
+  console.log("ADDED FOR TESTING OF CODE RABBIT");
   return (
     <>
       <MailboxLandingPageComponent />
