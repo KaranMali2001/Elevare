@@ -4,8 +4,10 @@ services:
   fastapi:
     build: .
     container_name: fastapi_dev
+    env_file:
+      - .env
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
       - qdrant
     environment:
