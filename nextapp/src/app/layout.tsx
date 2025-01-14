@@ -1,17 +1,18 @@
-import type { Metadata } from "next";
+"use client";
 import { Toaster } from "react-hot-toast";
+import "react-loading-skeleton/dist/skeleton.css";
 import "./globals.css";
 import { Providers } from "./providers";
-import "react-loading-skeleton/dist/skeleton.css";
-import Head from "next/head";
 
-export const metadata: Metadata = {
-  title: "elevareapp",
-  description: "Elevate the way of handling your mails with elevareapp",
-  other: {
-    "google-site-verification": "du5i7A2AeolTZjy9AXJXKcWd0B8g_wG9MLH0h6_DPQ0",
-  },
-};
+import { useEffect, useState } from "react";
+import Banner from "@/components/banner";
+// export const metadata: Metadata = {
+//   title: "elevareapp",
+//   description: "Elevate the way of handling your mails with elevareapp",
+//   other: {
+//     "google-site-verification": "du5i7A2AeolTZjy9AXJXKcWd0B8g_wG9MLH0h6_DPQ0",
+//   },
+// };
 
 export default function RootLayout({
   children,
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body style={{ fontFamily: "SFProDisplayMedium" }}>
         <Providers>
+          <Banner />
           {children}
           <Toaster
             position="top-center"
