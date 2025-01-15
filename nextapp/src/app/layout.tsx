@@ -22,7 +22,6 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body style={{ fontFamily: "SFProDisplayMedium" }}>
         <Providers>
-          <FloatingBanner />
           <div className="pt-1">{children}</div>
           <Toaster
             position="top-center"

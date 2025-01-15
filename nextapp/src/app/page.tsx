@@ -1,16 +1,13 @@
+import { FloatingBanner } from "@/components/banner";
 import { MailboxLandingPageComponent } from "@/components/mailbox-landing-page";
-
+import axios from "axios";
+export const dynamic = "force-dynamic";
 export default async function Page() {
-  const request = await fetch(
-    `https://ipinfo.io/json?token=${process.env.IP_TOKEN_INFO}`
-  );
-  const jsonResponse = await request.json();
+  try {
+    await axios.get(`${process.env.LLM_URL}`);
 
-  console.log("hello", jsonResponse.ip, jsonResponse.country);
-
-  return (
-    <>
-      <MailboxLandingPageComponent />
-    </>
-  );
+    return <MailboxLandingPageComponent />;
+  } catch (error) {
+    return <FloatingBanner />;
+  }
 }

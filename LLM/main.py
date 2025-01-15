@@ -121,21 +121,10 @@ class Chat_Query(BaseModel):
     user_name: str
 
 
-# req:
-# thread_id: "string",
-# previous_conversation_summary: "string"
-# latest_thread_conversation: {
-#     latest_sender_name1:  latest_body,
-#     latest_sender_name2:  latest_body,
-#     latest_sender_name1:  latest_body,
-#     latest_sender_name2:  latest_body,
-# }
 
-# res:
-# thread_id: "string"
-# thread_summary: "the summary in paragraph."
-
-# @app.post("/api/post/batch_of_mails") -- before
+@app.get("/")
+async def started():
+    return JSONResponse({"message": "ok"},status_code=200)
 @app.post("/api/post/summury/batch_of_mails")  # -- After
 async def mail_batch(mail_batch_request: MailBatchRequest):
     try:
