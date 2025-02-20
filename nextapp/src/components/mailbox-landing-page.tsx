@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import VideoPlayer from "./videoPlayer";
+import { Button } from "./ui/button";
 
 const ThemeContext = createContext({
   isDarkMode: false,
@@ -44,7 +45,82 @@ const faqs = [
       "We provide comprehensive support including 24/7 customer service, extensive documentation, video tutorials, and a community forum. Our dedicated support team is always ready to assist you with any questions or issues.",
   },
 ];
+const pricingPlans = [
+  {
+    name: "Starter",
+    price: "9",
+    billing: "monthly",
+    features: [
+      "5 User accounts",
+      "10GB Storage per user",
+      "Basic email analytics",
+      "24/7 Email support",
+      "Mobile app access",
+    ],
+    cta: "Start Free Trial",
+    popular: false,
+  },
+  {
+    name: "Professional",
+    price: "29",
+    billing: "monthly",
+    features: [
+      "25 User accounts",
+      "50GB Storage per user",
+      "Advanced analytics",
+      "Priority support",
+      "API access",
+      "Custom integrations",
+    ],
+    cta: "Start Free Trial",
+    popular: true,
+  },
+  {
+    name: "Enterprise",
+    price: "99",
+    billing: "monthly",
+    features: [
+      "Unlimited users",
+      "1TB Storage per user",
+      "Custom analytics",
+      "Dedicated support",
+      "SLA guarantee",
+      "Custom deployment",
+    ],
+    cta: "Contact Sales",
+    popular: false,
+  },
+];
+const testimonials = [
+  {
+    name: "Sarah Chen",
+    role: "Director of Operations, TechFlow Inc",
+    image:
+      "https://wemeancareer.com/wp-content/uploads/2020/04/Professional-LinkedIn-Headshot.png",
+    content:
+      "Elevare has transformed how our team handles email communication. The AI-powered categorization saves us hours every week.",
+    rating: 5,
+  },
+  {
+    name: "Michael Rodriguez",
+    role: "CEO, StartupBoost",
+    image:
+      "https://i.pinimg.com/736x/07/33/ba/0733ba760b29378474dea0fdbcb97107.jpg",
 
+    content:
+      "The analytics insights have helped us improve our response times by 45%. A game-changer for customer service.",
+    rating: 5,
+  },
+  {
+    name: "Emma Thompson",
+    role: "Marketing Manager, GrowthLabs",
+    image:
+      "https://th.bing.com/th/id/R.30e1ef0ebd5eb6aba5ec9f202a2d8022?rik=PIkgv7h%2fdcY8jg&riu=http%3a%2f%2fwww.hagopsphotography.com%2fwp-content%2fuploads%2f2021%2f10%2fFemale-LinkedIn-portrait.jpg&ehk=Un7KtFAQC49hq%2bCuxqENn8kViMvrIXJHeEZTfb1V3s8%3d&risl=&pid=ImgRaw&r=0",
+    content:
+      "Integration with our existing tools was seamless. The mobile app is fantastic for managing emails on the go.",
+    rating: 5,
+  },
+];
 const FAQItem = ({
   question,
   answer,
@@ -146,7 +222,7 @@ export function MailboxLandingPageComponent() {
                       >
                         {item}
                       </Link>
-                    ),
+                    )
                   )}
                 </nav>
               </div>
@@ -213,16 +289,6 @@ export function MailboxLandingPageComponent() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
               >
-                {/* <video
-                  width="1200"
-                  height="800"
-                  controls
-                  preload="none"
-                  className="bg-purple-500"
-                >
-                  <source src="https://www.youtube.com/watch?v=O8h3CZVUVAY" />
-                  Karan
-                </video> */}
                 <VideoPlayer
                   videoUrl="https://www.youtube.com/watch?v=O8h3CZVUVAY"
                   autoPlay={true}
@@ -262,12 +328,7 @@ export function MailboxLandingPageComponent() {
                       description:
                         "Quickly locate any email or attachment using advanced search capabilities. Our system provides instant, accurate results, allowing you to retrieve important information and past communications effortlessly, saving time and boosting efficiency.",
                     },
-                    // {
-                    //   title: "Secure Backup",
-                    //   icon: <Shield className="w-6 h-6" />,
-                    //   description:
-                    //     "Experience the ease of integrating your existing email system with our AI-driven platform. Our solution ensures smooth synchronization between your emails and business tools, streamlining your workflow without disrupting your current processes.",
-                    // },
+
                     {
                       title: "Advanced Analytics",
                       icon: <BarChart className="w-6 h-6" />,
@@ -416,101 +477,69 @@ export function MailboxLandingPageComponent() {
               .
             </div>
             <motion.section
-              className="py-20 px-6"
+              className="py-20 px-40"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
             >
-              <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl font-bold text-center mb-12 tracking-tight">
-                  Pricing for Everyone
-                </h2>
-                <div className="grid md:grid-cols-3 gap-8">
-                  {[
-                    {
-                      name: "Free",
-                      price: "0",
-                      features: [
-                        "1 User",
-                        "1GB Storage",
-                        "Help Center Access",
-                        "Email Support",
-                      ],
-                    },
-                    {
-                      name: "Pro",
-                      price: "Coming Soon",
-                      features: ["...", "...", "..."],
-                    },
-                    {
-                      name: "Enterprise",
-                      price: "Coming Soon",
-                      features: ["...", "...", "..."],
-                    },
-                  ].map((plan, index) => (
+              <div className="container px-4 md:px-6">
+                <div className="text-center mb-10">
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-black">
+                    Simple, Transparent Pricing
+                  </h2>
+                  <p className="text-gray-500 mt-4">
+                    Choose the plan thats right for your team
+                  </p>
+                </div>
+                <div className="grid gap-6 lg:grid-cols-3">
+                  {pricingPlans.map((plan, i) => (
                     <motion.div
-                      key={index}
-                      className={`${isDarkMode ? "bg-gray-700" : "bg-white"} p-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
+                      key={i}
+                      className={`rounded-xl border bg-card p-6  hover:ring-2 hover:ring-primary`}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ delay: i * 0.1 }}
                     >
-                      <h3 className="text-2xl font-semibold mb-4">
-                        {plan.name}
-                      </h3>
-                      <div className="text-4xl font-bold mb-6">
-                        ${plan.price}
-                        <span
-                          className={`text-sm font-normal ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
-                        >
-                          /month
+                      {plan.popular && (
+                        <div className="text-primary text-sm font-medium mb-2">
+                          Most Popular
+                        </div>
+                      )}
+                      <h3 className="text-2xl font-bold">{plan.name}</h3>
+                      <div className="mt-4 flex items-baseline">
+                        <span className="text-4xl font-bold">
+                          ${plan.price}
+                        </span>
+                        <span className="ml-1 text-muted-foreground">
+                          /{plan.billing}
                         </span>
                       </div>
-                      <ul className="space-y-3 mb-8">
-                        {plan.features.map((feature, featureIndex) => (
-                          <li
-                            key={featureIndex}
-                            className="flex items-center space-x-3"
-                          >
-                            <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center">
-                              <svg
-                                className="w-3 h-3 text-white"
-                                fill="none"
+                      <ul className="mt-6 space-y-4">
+                        {plan.features.map((feature, j) => (
+                          <li key={j} className="flex items-center">
+                            <svg
+                              className="h-4 w-4 text-primary mr-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth="2"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path d="M5 13l4 4L19 7"></path>
-                              </svg>
-                            </div>
-                            <span
-                              className={
-                                isDarkMode ? "text-gray-300" : "text-gray-700"
-                              }
-                            >
-                              {feature}
-                            </span>
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                            {feature}
                           </li>
                         ))}
                       </ul>
-                      <Link href="/login">
-                        <button
-                          className={`w-full py-3 rounded-full text-sm font-medium transition-all duration-200 ${
-                            index === 1
-                              ? isDarkMode
-                                ? "bg-white text-gray-900 hover:bg-gray-200"
-                                : "bg-black text-white hover:bg-gray-800"
-                              : isDarkMode
-                                ? "bg-gray-600 text-white hover:bg-gray-500"
-                                : "bg-white text-black border border-gray-300 hover:bg-gray-50"
-                          }`}
-                        >
-                          {index === 1 ? "Get Started" : "Sign in"}
-                        </button>
-                      </Link>
+                      <Button
+                        className={`mt-8 w-full rounded-full ${plan.popular ? "" : "variant-outline"}`}
+                      >
+                        {plan.cta}
+                      </Button>
                     </motion.div>
                   ))}
                 </div>
@@ -520,53 +549,55 @@ export function MailboxLandingPageComponent() {
               .
             </div>
             <motion.section
-              className={`py-20 px-6 ${isDarkMode ? "bg-gray-800" : "bg-[rgb(245,245,247)]"}`}
+              className={`py-20 px-40 ${isDarkMode ? "bg-gray-800" : "bg-[rgb(245,245,247)]"}`}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
             >
-              <div className="max-w-6xl mx-auto">
-                <h2 className="text-4xl font-bold text-center mb-4 tracking-tight">
-                  Love from our customers
-                </h2>
-                <p
-                  className={`text-xl text-center ${isDarkMode ? "text-gray-300" : "text-gray-600"} mb-12`}
-                >
-                  See what our customers are saying about our product
-                </p>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {[...Array(6)].map((_, index) => (
+              <div className="container px-4 md:px-6">
+                <div className="text-center mb-10">
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                    Trusted by Industry Leaders
+                  </h2>
+                  <p className="text-gray-500 mt-4">
+                    See what our customers have to say
+                  </p>
+                </div>
+                <div className="grid gap-6 lg:grid-cols-3">
+                  {testimonials.map((testimonial, i) => (
                     <motion.div
-                      key={index}
-                      className={`${isDarkMode ? "bg-gray-700" : "bg-white"} p-6 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
+                      key={i}
+                      className="rounded-xl border bg-card p-6"
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ delay: i * 0.1 }}
                     >
                       <div className="flex items-center space-x-4 mb-4">
-                        <div className="w-12 h-12 bg-gray-200 rounded-full" />
+                        <Image
+                          src={testimonial.image || "/placeholder.svg"}
+                          alt={testimonial.name}
+                          width={50}
+                          height={50}
+                          className="rounded-full"
+                        />
                         <div>
-                          <div className="font-semibold">John Doe</div>
-                          <div
-                            className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
-                          >
-                            CEO at Company
+                          <div className="font-semibold">
+                            {testimonial.name}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {testimonial.role}
                           </div>
                         </div>
                       </div>
-                      <p
-                        className={`${isDarkMode ? "text-gray-300" : "text-gray-600"} mb-4 leading-relaxed`}
-                      >
-                        This email client has revolutionized the way we handle
-                        communications. It is intuitive, powerful, and a joy to
-                        use every day.
+                      <p className="text-muted-foreground mb-4">
+                        {testimonial.content}
                       </p>
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, starIndex) => (
+                      <div className="flex">
+                        {[...Array(testimonial.rating)].map((_, i) => (
                           <Star
-                            key={starIndex}
-                            className="w-5 h-5 text-yellow-400 fill-current"
+                            key={i}
+                            className="h-5 w-5 text-yellow-400 fill-current"
                           />
                         ))}
                       </div>
