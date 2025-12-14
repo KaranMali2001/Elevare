@@ -48,7 +48,7 @@
     "html-to-text": "^9.0.5",
     "iconv-lite": "^0.6.3",
     "lucide-react": "^0.438.0",
-    "next": "^14.2.13",
+    "next": "14.2.35",
     "next-auth": "5.0.0-beta.25",
     "pdfkit": "^0.15.1",
     "razorpay": "^2.9.4",
